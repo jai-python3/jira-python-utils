@@ -86,6 +86,7 @@ def main(change_control_id, credential_file, config_file, compliance123_base_url
     else:
         with open(rest_url_file, 'r') as f:
             url = f.readline()
+            url = url.strip()
             print("read the REST URL from file '{}'".format(rest_url_file))
 
     if not os.path.exists(credential_file):
@@ -94,6 +95,7 @@ def main(change_control_id, credential_file, config_file, compliance123_base_url
 
     with open(credential_file, 'r') as f:
         line = f.readline()
+        line = line.strip()
         (username, password) = line.split(':')
         print("read username and password from credentials file")
 

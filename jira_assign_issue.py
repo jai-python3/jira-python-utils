@@ -24,6 +24,7 @@ def main(credential_file, assignee, issue):
     else:
         with open(rest_url_file, 'r') as f:
             url = f.readline()
+            url = url.strip()
             print("read the REST URL from file '{}'".format(rest_url_file))
 
     if credential_file is None:
@@ -39,6 +40,7 @@ def main(credential_file, assignee, issue):
 
     with open(credential_file, 'r') as f:
         line = f.readline()
+        line = line.strip()
         (username, password) = line.split(':')
         print("read username and password from credentials file")
 
