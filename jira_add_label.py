@@ -59,27 +59,40 @@ def main(credential_file, label, issue):
         print("Could not instantiate JIRA for url '{}'".format(url))
         sys.exit(1)
 
+    print("Will attempt to add label(s) '{}' to JIRA issue '{}'".format(label, issue))
 
-    label = label.replace(' ', '-')
-
-    print("Will attempt to add label '{}' to JIRA issue '{}'".format(label, issue))
+    label_ctr = 0
+    labels = label.split(',')
 
     try:
 
         i = auth_jira.issue(issue)
+
         if i is None:
             raise Exception("Could not retrieve issue object for issue '{}'".format(issue))
 
-        i.fields.labels.append(label)
+        for l in labels:
+            label_ctr += 1
+            l = l.strip()
+            l = l.replace(' ', '-')
+            i.fields.labels.append(l)
         # i.fields.labels.append(u'change-control-form')
         i.update(fields={'labels': i.fields.labels})
         # i.update(labels=[label])
 
     except Error as e:
-        print("Encountered some exception while attempting to add label '{}' to issue '{}': {}".format(label, issue, e))
+        if label_ctr == 1:
+            print("Encountered some exception while attempting to add label '{}' to issue '{}': {}".format(label, issue, e))
+        else:
+            print("Encountered some exception while attempting to add labels '{}' to issue '{}': {}".format(label, issue, e))
+
         sys.exit(1)
     else:
-        print("Added label '{}' to issue '{}'".format(label, issue))
+        if label_ctr == 1:
+            print("Added label '{}' to issue '{}'".format(label, issue))
+        else:
+            print("Added labels '{}' to issue '{}'".format(label, issue))
+
 
 
 
