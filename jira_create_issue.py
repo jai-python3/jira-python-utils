@@ -67,7 +67,7 @@ def main(credential_file, project, summary, desc, issue_type, assignee):
         line = f.readline()
         line = line.strip()
         (username, password) = line.split(':')
-        print("read username and password from credentials file")
+        print("read username and password from credentials file '{}'".format(credential_file))
 
     auth_jira = JIRA(url, basic_auth=(username, password))
     if auth_jira is None:
