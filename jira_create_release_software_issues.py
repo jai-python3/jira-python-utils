@@ -26,6 +26,7 @@ g_parent_issue_id = None
 g_issue_type = 'Task'
 g_link_type = 'relates to'
 
+
 def create_issue_software_release():
     """Create a new JIRA issue for the 'software release'
     """
@@ -33,6 +34,16 @@ def create_issue_software_release():
     description = "Need to install software release.\ncode-base: {}\nversion: {}\nserver(s): {}".format(g_codebase, g_version, g_server)
     labels = ['software-release', 'install-server:' + g_server, g_codebase + '-' + g_version, g_codebase]
     return create_issue(summary, description, labels)
+
+
+def create_issue_install_software():
+    """Create a new JIRA issue for the 'install software'
+    """
+    summary = "install software release for {} {} on {}".format(g_codebase, g_version, g_server)
+    description = "Need to install software release.\ncode-base: {}\nversion: {}\nserver(s): {}".format(g_codebase, g_version, g_server)
+    labels = ['software-release', 'install-server:' + g_server, g_codebase + '-' + g_version, g_codebase]
+    return create_issue(summary, description, labels)
+
 
 def create_issue_establish_release_candidate():
     """Create a new JIRA issue for the 'establish release candidate'
@@ -42,6 +53,7 @@ def create_issue_establish_release_candidate():
     labels = ['establish-release-candidate', g_codebase + '-' + g_version, g_codebase]
     return create_issue(summary, description, labels)
 
+
 def create_issue_prepare_change_control():
     """Create a new JIRA issue for 'prepare change control'
     """
@@ -50,6 +62,7 @@ def create_issue_prepare_change_control():
     labels = ['prepare-change-control', 'install-server:' + g_server, g_codebase + '-' + g_version, g_codebase]
     return create_issue(summary, description, labels)
 
+
 def  create_issue_prepare_validation_docs():
     """Create a new JIRA issue for 'prepare validation documents'
     """
@@ -57,6 +70,7 @@ def  create_issue_prepare_validation_docs():
     description = "Need to prepare validation documents for a software release.\ncode-base: {}\nversion: {}\nserver(s): {}".format(g_codebase, g_version, g_server)
     labels = ['prepare-validation-documents', g_codebase + '-' + g_version, g_codebase]
     return create_issue(summary, description, labels)
+
 
 def create_issue_execute_validation_checks():
     """Create a new JIRA issue for 'execute validation checks'
@@ -75,6 +89,7 @@ def create_issue_execute_validation_checks():
 #             print(label)
 #     print("\n")
 #     return 'ID1'
+
 
 def create_issue(summary, description, labels=None):
     """Create a new JIRA issue
@@ -228,7 +243,6 @@ def main(credential_file, project, codebase, version, server, assignee, componen
         assignee = DEFAULT_ASSIGNEE
         print("--assignee was not specified and therefore was set to '{}'".format(assignee))
 
-
     with open(credential_file, 'r') as f:
         line = f.readline()
         line = line.strip()
@@ -272,6 +286,7 @@ def main(credential_file, project, codebase, version, server, assignee, componen
     if all:
         create_issue_establish_release_candidate()
         create_issue_prepare_change_control()
+        create_issue_install_software()
         create_issue_prepare_validation_docs()
         create_issue_execute_validation_checks()
     else:
@@ -314,7 +329,6 @@ def main(credential_file, project, codebase, version, server, assignee, componen
                 create_issue_execute_validation_checks()
             else:
                 print("Will not create 'execute validation checks' JIRA issue")
-
 
 
 if __name__ == '__main__':
