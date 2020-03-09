@@ -35,6 +35,13 @@ def create_issue_software_release():
     labels = ['software-release', 'install-server:' + g_server, g_codebase + '-' + g_version, g_codebase]
     return create_issue(summary, description, labels)
 
+def create_issue_test_cases_software():
+    """Create a new JIRA issue for the 'test cases'
+    """
+    summary = "test cases for {} {}".format(g_codebase, g_version)
+    description = "Identify and collect test cases.\ncode-base: {}\nversion: {}".format(g_codebase, g_version)
+    labels = ['test-cases', g_codebase + '-' + g_version, g_codebase]
+    return create_issue(summary, description, labels)
 
 def create_issue_install_software():
     """Create a new JIRA issue for the 'install software'
@@ -289,6 +296,8 @@ def main(credential_file, project, codebase, version, server, assignee, componen
         create_issue_install_software()
         create_issue_prepare_validation_docs()
         create_issue_execute_validation_checks()
+        create_issue_test_cases_software()
+
     else:
         yes_or_no_1 = None
         while yes_or_no_1 is None or yes_or_no_1 is '':
@@ -330,6 +339,15 @@ def main(credential_file, project, codebase, version, server, assignee, componen
             else:
                 print("Will not create 'execute validation checks' JIRA issue")
 
+        yes_or_no_5 = None
+        while yes_or_no_5 is None or yes_or_no_5 is '':
+            yes_or_no_5 = input("\nCreate 'test cases' JIRA issue? [Y/n] ")
+            if yes_or_no_5 is None or yes_or_no_5 is '':
+                yes_or_no_5 = 'Y'
+            if yes_or_no_5 == 'Y' or yes_or_no_5 == 'y':
+                create_issue_test_cases_software()
+            else:
+                print("Will not create 'test cases' JIRA issue")
 
 if __name__ == '__main__':
     main()
