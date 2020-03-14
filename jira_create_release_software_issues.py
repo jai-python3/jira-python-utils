@@ -26,6 +26,8 @@ g_parent_issue_id = None
 g_issue_type = 'Task'
 g_link_type = 'relates to'
 
+g_issues = []
+
 
 def create_issue_software_release():
     """Create a new JIRA issue for the 'software release'
@@ -202,6 +204,9 @@ def create_issue(summary, description, labels=None):
             else:
                 print("Added labels '{}' to JIRA issue '{}'".format(label_str, new_issue_id))
 
+    global g_issues
+    g_issues.append(new_issue_id)
+
     return new_issue_id
 
 
@@ -368,6 +373,10 @@ def main(credential_file, project, codebase, version, server, assignee, componen
                 create_issue_collect_release_documents()
             else:
                 print("Will not create 'collect release documents' JIRA issue")
+
+    print("Remember to assign the epic link for these new JIRA issues:")
+    for issue in g_issues:
+        print("{}".issue)
 
 
 if __name__ == '__main__':
