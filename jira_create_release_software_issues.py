@@ -96,7 +96,7 @@ def create_issue_collect_release_documents():
     """Create a new JIRA issue for 'collect release documents'
     """
     summary = "collect release documents for {} {} on {}".format(g_codebase, g_version, g_server)
-    description = "Need to collect all release documents for the software release.\ncode-base: {}\nversion: {}\nserver(s): {}".format(g_codebase, g_version, g_server)
+    description = "Need to prepare the binder coverpage and collect all release documents (change control and validation documents) for the software release.\ncode-base: {}\nversion: {}\nserver(s): {}".format(g_codebase, g_version, g_server)
     labels = ['collect-release-documents', 'install-server:' + g_server, g_codebase + '-' + g_version, g_codebase]
     return create_issue(summary, description, labels)
 
