@@ -218,8 +218,28 @@ def create_issue(summary, description, labels=None):
 @click.option('--server', help='The server the code will be installed on')
 @click.option('--assignee', help='The assignee')
 @click.option('--component', help='The component')
-@click.option('--all', is_flag=True)
+@click.option('--all', is_flag=True, default=False)
 def main(credential_file, project, codebase, version, server, assignee, component, all):
+    """Create the standard set of JIRA issues.
+
+
+    If executed with --all option, will create issues for all of the following:
+
+        establish release candidate
+
+        prepare change control
+
+        install software
+
+        prepare validation documents
+
+        execute validation checks
+
+        prepare test cases
+
+        collect release documents
+
+    """
 
     rest_url_file = DEFAULT_URL_FILE
     if not os.path.exists(rest_url_file):
@@ -305,14 +325,31 @@ def main(credential_file, project, codebase, version, server, assignee, componen
     g_parent_issue_id = parent_issue_id
 
     if all:
-        create_issue_establish_release_candidate()
-        create_issue_prepare_change_control()
-        create_issue_install_software()
-        create_issue_prepare_validation_docs()
-        create_issue_execute_validation_checks()
-        create_issue_test_cases_software()
-        create_issue_collect_release_documents()
-        
+        yes_or_no_all = None
+        while yes_or_no_all is None or yes_or_no_all is '':
+            print("\nWill create new JIRA issues ALL of the following?")
+            print(" establish release candidate")
+            print(" prepare change control")
+            print(" install software")
+            print(" prepare validation documents")
+            print(" execute validation checks")
+            print(" prepare test cases")
+            print(" collect release documents")
+            yes_or_no_all = input("\nCreate new JIRA issues ALL of those? [Y/n] ")
+
+            if yes_or_no_all is None or yes_or_no_all is '':
+                yes_or_no_all = 'Y'
+            if yes_or_no_all == 'Y' or yes_or_no_all == 'y':
+                create_issue_establish_release_candidate()
+                create_issue_prepare_change_control()
+                create_issue_install_software()
+                create_issue_prepare_validation_docs()
+                create_issue_execute_validation_checks()
+                create_issue_test_cases_software()
+                create_issue_collect_release_documents()
+
+            else:
+                print("Will not create new JIRA issues for ALL of those.")
     else:
         yes_or_no_1 = None
         while yes_or_no_1 is None or yes_or_no_1 is '':
