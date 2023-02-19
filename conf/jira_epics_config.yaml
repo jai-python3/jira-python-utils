@@ -1,0 +1,16 @@
+---
+confluence:
+  green_color: "#00FF00"
+  space_key: "~jaideep.sundaram"
+  rest_api_url: "https://confluence.regeneron.com/rest/api/content"
+  parent_page_id: 318151621
+  home_space: "https://confluence.regeneron.com/spaces/viewspace.action?key=~jaideep.sundaram"
+jira:
+  assignee: "jaideep.sundaram"
+  issue_base_url: "https://jira.regeneron.com/browse/"
+  epics:
+    links:
+      - name: "OMOP Matrix Generation Airflow Workflow with R-scripts Epic"
+        query: '"Epic Link" = RGCCIDM-118'
+      - name: "Data Transfer Infrastructre - Epic 1"
+        query: '"Epic Link" = RGCCIDM-120'
