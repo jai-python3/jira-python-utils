@@ -34,7 +34,6 @@ DEFAULT_OUTDIR = os.path.join(
 
 DEFAULT_CONFIG_FILE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
-    '..',
     'conf/jira_epics_config.yaml'
 )
 
