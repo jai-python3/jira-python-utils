@@ -1,12 +1,20 @@
 import os
 import sys
-import click
 
+import click
 from jira import JIRA
 
-DEFAULT_URL_FILE = os.path.dirname(__file__) + '/conf/jira_rest_url.txt'
+DEFAULT_URL_FILE = os.path.join(
+    os.getenv("HOME"),
+    '.jira',
+    'jira_rest_url.txt'
+)
 
-DEFAULT_CREDENTIAL_FILE = os.environ['HOME'] + '/.jira/credentials.txt'
+DEFAULT_CREDENTIAL_FILE = os.path.join(
+    os.getenv('HOME'),
+    '.jira',
+    'credentials.txt'
+)
 
 DEFAULT_ASSIGNEE = 'jsundaram'
 
@@ -69,7 +77,22 @@ def main(credential_file, project, summary, desc, issue_type, assignee):
         (username, password) = line.split(':')
         print("read username and password from credentials file '{}'".format(credential_file))
 
-    auth_jira = JIRA(url, basic_auth=(username, password))
+    if issue_type.lower() == 'task':
+        issue_type = 'Task'
+    elif issue_type.lower() == 'bug':
+        issue_type = 'Bug'
+    elif issue_type.lower() == 'story':
+        issue_type = 'Story'
+    else:
+        print(f"issue type '{issue_type}' is not supported")
+        sys.exit(1)
+
+    options = {
+        'server': url, 
+        'verify': False
+    }
+
+    auth_jira = JIRA(options=options, basic_auth=(username, password))
     if auth_jira is None:
         print("Could not instantiate JIRA for url '{}'".format(url))
         sys.exit(1)
@@ -77,7 +100,14 @@ def main(credential_file, project, summary, desc, issue_type, assignee):
     print("Will attempt to create a JIRA issue for project '{}' summary '{}' type '{}' assignee '{}' description '{}'".format(project, summary, issue_type, assignee, desc))
 
     try:
-        new_issue = auth_jira.create_issue(project=project, summary=summary, issuetype={'name':issue_type}, description=desc, assignee={'name':assignee})
+        new_issue = auth_jira.create_issue(
+            project={'key':project}, 
+            summary=summary, 
+            issuetype={'name':issue_type}, 
+            description=desc, 
+            assignee={'name':assignee}
+        )
+
     except Error as e:
         print("Encountered some exception while attempting to create a new JIRA issue: '{}'".format(e))
         sys.exit(1)
