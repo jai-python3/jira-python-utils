@@ -12,8 +12,6 @@ from jira import JIRA
 
 from src.confluence.manager import Manager as ConfluenceManager
 
-# query = """"Epic Link" = RGCCIDM-118 AND assignee in (jaideep.sundaram)"""
-
 DEFAULT_URL_FILE = os.path.join(
     os.getenv("HOME"),
     '.jira',
@@ -37,15 +35,12 @@ DEFAULT_OUTDIR = os.path.join(
 DEFAULT_CONFIG_FILE = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     '..',
-    'conf/config.yaml'
+    'conf/jira_epics_config.yaml'
 )
 
 LOGGING_FORMAT = "%(levelname)s : %(asctime)s : %(pathname)s : %(lineno)d : %(message)s"
 
 LOG_LEVEL = logging.INFO
-
-# DEFAULT_ASSIGNEE = 'jaideep.sundaram'
-
 
 
 def get_jira_epic_links(config, config_file: str) -> List[Dict[str, str]]:
@@ -271,10 +266,6 @@ def main(assignee: str, config_file: str, credential_file: str, logfile: str, ou
     check_credential_file(credential_file)
     
     error_ctr = 0
-
-    # if not query:
-    #     print("--query was not specified")
-    #     error_ctr += 1
 
     if error_ctr > 0:
         print("Required parameter(s) not defined")
