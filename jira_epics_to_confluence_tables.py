@@ -66,7 +66,8 @@ def create_html_content(
     issues: List[Any], 
     config: Dict[str, Any]) -> str:
     """Create the HTML table that will be inserted into the new Confluence page."""
-    green_color = config['confluence']['green_color']
+    in_development_color = config['confluence']['status']['color_codes']['in_development']
+    done_color = config['confluence']['status']['color_codes']['done']
 
     logging.info(f"Will add '{len(issues)}' issues to the HTML table for Confluence page with title '{epic_name}'")
     
@@ -91,7 +92,9 @@ def create_html_content(
         content.append(f"<td>{issue.fields.priority.name}</td>")
         status = issue.fields.status.name
         if status.lower() == 'done':
-            content.append(f"<td style='font-weight: bold; color: {green_color}'>{status}</td></tr>")
+            content.append(f"<td style='font-weight: bold; color: {done_color}'>{status}</td></tr>")
+        elif status.lower() == 'in development':
+            content.append(f"<td style='font-weight: bold; color: {in_development_color}'>{status}</td></tr>")
         else:
             content.append(f"<td>{status}</td></tr>")
 
@@ -328,6 +331,7 @@ def main(assignee: str, config_file: str, credential_file: str, logfile: str, ou
             logging.info(f"Added assignee '{assignee}' to the query: {query}")
 
         epic_name = link['name']
+        confluence_page_name = link['confluence_page_name']
 
         logging.info(f"Will attempt to retrieve issues for epic '{epic_name}' with query '{query}'")
 
@@ -356,7 +360,7 @@ def main(assignee: str, config_file: str, credential_file: str, logfile: str, ou
 
         manager.create_page(
             auth=auth,
-            title=epic_name,
+            title=confluence_page_name,
             html_content=html_content
         )
 
