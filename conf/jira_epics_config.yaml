@@ -1,6 +1,9 @@
 ---
 confluence:
-  green_color: "#00FF00"
+  status:
+    color_codes:
+      done: "#00FF00"
+      in_development: "#FF8300"
   space_key: "~jaideep.sundaram"
   rest_api_url: "https://confluence.regeneron.com/rest/api/content"
   parent_page_id: 318151621
@@ -12,5 +15,7 @@ jira:
     links:
       - name: "OMOP Matrix Generation Airflow Workflow with R-scripts Epic"
         query: '"Epic Link" = RGCCIDM-118'
+        confluence_page_name: "OMOP Matrix Generation Airflow Workflow with R-scripts Epic"
       - name: "Data Transfer Infrastructre - Epic 1"
         query: '"Epic Link" = RGCCIDM-120'
+        confluence_page_name: "Data Transfer Infrastructre - Epic 1"
