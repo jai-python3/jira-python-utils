@@ -1,0 +1,19 @@
+---
+confluence:
+  status:
+    color_codes:
+      done: "#00FF00"
+      in_development: "#FF8300"
+  space_key: "~jaideep.sundaram"
+  rest_api_url: "https://confluence.regeneron.com/rest/api/content"
+  parent_page_id: "Jay's Weekly Progress Report"
+  # 318151621
+  home_space: "https://confluence.regeneron.com/spaces/viewspace.action?key=~jaideep.sundaram"
+jira:
+  assignee: "jaideep.sundaram"
+  issue_base_url: "https://jira.regeneron.com/browse/"
+  weekly:
+    - start_date: 2023-02-10
+      end_date: 2023-02-17
+    - start_date: 2023-02-17
+      end_date: 2023-02-24
