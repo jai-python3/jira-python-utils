@@ -117,7 +117,10 @@ class Manager:
             )
 
             json_output = json.loads(result.text)
-            
+            logging.info(f"{json_output=}")
+            if 'id' not in json_output:
+                raise Exception("did not find id in the json_output!")
+
             pid = json_output['id']
             
             # print "Creating: https://confluence.myorg.org/display/SPACE/" + environment
