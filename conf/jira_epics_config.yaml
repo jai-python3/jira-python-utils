@@ -13,9 +13,30 @@ jira:
   issue_base_url: "https://jira.regeneron.com/browse/"
   epics:
     links:
-      - name: "OMOP Matrix Generation Airflow Workflow with R-scripts Epic"
+      - name: "OMOP Matrix Generation Airflow Workflow with R-scripts Epic 1"
         query: '"Epic Link" = RGCCIDM-118'
-        confluence_page_name: "OMOP Matrix Generation Airflow Workflow with R-scripts Epic"
-      - name: "Data Transfer Infrastructre - Epic 1"
+        confluence_page_name: "OMOP Matrix Generation Airflow Workflow with R-scripts Epic 1"
+      - name: "OMOP Matrix Generation Airflow Workflow with R-scripts Epic 2"
+        query: '"Epic Link" = RGCCIDM-119'
+        confluence_page_name: "OMOP Matrix Generation Airflow Workflow with R-scripts Epic 2"
+      - name: "Data Transfer Infrastructure - Epic 1"
         query: '"Epic Link" = RGCCIDM-120'
-        confluence_page_name: "Data Transfer Infrastructre - Epic 1"
+        confluence_page_name: "Data Transfer Infrastructure - Epic 1"
+      - name: "IMS QC/QA - Epic 1"
+        query: '"Epic Link" = RIMS-45'
+        confluence_page_name: "IMS QC/QA - Epic 1"
+      - name: "Matrix Generation Infrastructure - Epic 1"
+        query: '"Epic Link" = RGCCIDM-124'
+        confluence_page_name: "Matrix Generation Infrastructure - Epic 1"
+      - name: "OMOP CDM Open Source Contributions and Manuscript - Epic 1"
+        query: '"Epic Link" = RGCCIDM-126'
+        confluence_page_name: "OMOP CDM Open Source Contributions and Manuscript - Epic 1"
+      - name: "Phenotype Browser Application UAT Automation - Epic 1"
+        query: '"Epic Link" = PTB-264'
+        confluence_page_name: "Phenotype Browser Application UAT Automation - Epic 1"
+      - name: "Phenotype Browser Data QC/QA - Epic 1"
+        query: '"Epic Link" = PTB-266'
+        confluence_page_name: "Phenotype Browser Data QC/QA - Epic 1"
+      - name: "Phenotype Browser ETL - Epic 1"
+        query: '"Epic Link" = PTB-268'
+        confluence_page_name: "Phenotype Browser ETL - Epic 1"
