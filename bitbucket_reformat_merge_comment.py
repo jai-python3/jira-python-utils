@@ -24,55 +24,6 @@ LOGGING_FORMAT = "%(levelname)s : %(asctime)s : %(pathname)s : %(lineno)d : %(me
 LOG_LEVEL = logging.INFO
 
 
-def reformat_content_v1(infile: str, logfile: str, outdir: str, outfile: str) -> None:
-    lookup = {}
-    current_issue_id = None
-    logging.info(f"Will read file '{infile}'")
-    line_ctr = 0
-    comments = []
-    first_issue_found = False
-
-    with open(infile, 'r') as f:
-        for line in f:
-            logging.info(f"{line=}")
-
-            line_ctr += 1
-            line = line.strip()
-            if line == '':
-                # issue_found = False
-                continue
-            elif line.startswith('PTB-') or line.startswith('RGCCIDM-'):
-                if not first_issue_found:
-                    first_issue_found = True
-                    current_issue_id = line
-                    logging.info(f"Found the first issue id '{line}'")
-                    
-                logging.info(f"Found issue id '{line}'")
-                store_issue_comments(current_issue_id, comments, lookup)
-                current_issue_id = line
-                comments = []
-                continue
-            else:
-                logging.info(f"appending comment '{line=}'")
-                comments.append(line)
-        if not (line.startswith('PTB-') or line.startswith('RGCCIDM-')):
-            comments.append(line)
-        store_issue_comments(current_issue_id, comments, lookup)
-            # print(line)
-    # print(f"{lookup=}")
-
-    if line_ctr > 0:
-        logging.info(f"Read '{line_ctr}' lines from file '{infile}'")
-    else:
-        logging.info(f"Did not read any lines from file '{infile}'")
-
-    print("Here is the reformatted Bitbucket merge comment:")
-    for issue_id in lookup:
-        print(f"{issue_id}:")
-        for comment in lookup[issue_id]:
-            print(comment)
-
-
 def reformat_content(infile: str, logfile: str, outdir: str, outfile: str) -> None:
     logging.info(f"Will read file '{infile}'")
     
@@ -119,28 +70,6 @@ def reformat_content(infile: str, logfile: str, outdir: str, outfile: str) -> No
         for comment in comments:
             print(comment)
 
-
-def store_issue_comments(current_issue_id, comments, lookup) -> None:
-    if current_issue_id is not None:
-        if current_issue_id not in lookup:
-            lookup[current_issue_id] = []
-
-        if len(comments) > 0:
-            logging.info(f"storing '{len(comments)}' comments for issue '{current_issue_id}'")
-            for comment in comments:
-                logging.info(f"storing comment '{comment}' for issue '{current_issue_id}'")
-
-                lookup[current_issue_id].append(comment)
-        else:
-            logging.info(f"No comments to set for Jira issue '{current_issue_id}'")
-    
-        comments = []
-    
-    else:
-        logging.info(f"Current Jira issue is not defined but have '{len(comments)}' comments:")
-        for comment in comments:
-            logging.info(comment)
-    
 
 def check_infile(infile: str) -> None:
     """Check the input file."""
