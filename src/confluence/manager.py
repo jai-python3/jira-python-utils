@@ -1,9 +1,10 @@
 import json
 import logging
 import os
-from typing import List, Tuple, Union
+from typing import Dict, List, Tuple, Union
 
 import requests
+from rich import print as rprint
 
 DEFAULT_VERBOSE = False
 
@@ -99,32 +100,58 @@ class Manager:
         logging.info(f"json_output: {json_output}")
         if json_output['results']:
             pid = json_output['results'][0]['id']
-            print(f"Will update {self.config['confluence']['home_space']}")
-            logging.info(f"Will update {self.config['confluence']['home_space']}")
+            print(f"Page with title '{title}' in home space '{self.config['confluence']['home_space']}' already exists so will update it")
+            logging.info(f"Page with title '{title}' in home space '{self.config['confluence']['home_space']}' already exists so will update it")
         else:
-            data = {
-                'title': title,
-                'type': content_type,
-                'space': {'key': self.space_key}, 
-                'ancestors': [{'id': parent_page_id}] # ID of the parent page
-            }
-            result = requests.post(
-                self.rest_api_url,
-                headers=headers, 
-                auth=auth, 
-                json=data,
-                verify=False
-            )
+            self._create_page(headers, auth, parent_page_id, title, content_type)
 
-            json_output = json.loads(result.text)
-            logging.info(f"{json_output=}")
-            if 'id' not in json_output:
-                raise Exception("did not find id in the json_output!")
+        self.update_page(pid, headers, auth, title, html_content)
 
-            pid = json_output['id']
+    def _create_page(self, 
+    headers, 
+    auth, 
+    parent_page_id: int, 
+    title: str, 
+    content_type: str) -> int:
+        print(f"Page with title '{title}' in home space '{self.config['confluence']['home_space']}' does not exist, so will create it now")
+        logging.info(f"Page with title '{title}' in home space '{self.config['confluence']['home_space']}' does not exist, so will create it now")
+
+        data = {
+            'title': title,
+            'type': content_type,
+            'space': {'key': self.space_key}, 
+            'ancestors': [{'id': parent_page_id}] # ID of the parent page
+        }
+
+        result = requests.post(
+            self.rest_api_url,
+            headers=headers, 
+            auth=auth, 
+            json=data,
+            verify=False
+        )
+
+        json_output = json.loads(result.text)
+
+        logging.info(f"{json_output=}")
+
+        if 'id' not in json_output:
+            raise Exception("did not find id in the json_output!")
+
+        pid = json_output['id']
+
+        logging.info(f"Page with title '{title}' has created and assigned pagd ID '{pid}'")
+        print(f"Page with title '{title}' has created and assigned pagd ID '{pid}'")
             
-            # print "Creating: https://confluence.myorg.org/display/SPACE/" + environment
+        return pid
 
+    def update_page(self, 
+    pid: int, headers: Dict[str,str], 
+    auth, 
+    title: str, 
+    html_content: str) -> None:
+
+        logging.info(f"Will attempt to retrieve content for page with ID '{pid}'")
         result = requests.get(
             f"{self.rest_api_url}/{pid}",
             headers=headers,
@@ -134,7 +161,9 @@ class Manager:
 
         json_output = json.loads(result.text)
 
-        version = json_output['version']['number']
+        version = int(json_output['version']['number']) + 1
+
+        logging.info(f"Will attempt to update the page content - new version will be '{version}'")
 
         data = {
                 'type': 'page',
@@ -146,11 +175,12 @@ class Manager:
                     }
                 },
                 'version': {
-                    'number': version + 1,
+                    'number': version,
                 }
         }
 
-        requests.put(
+        logging.info(f"{data=}")
+        result = requests.put(
             f"{self.rest_api_url}/{pid}",
             headers=headers,
             auth=auth,
@@ -158,4 +188,12 @@ class Manager:
             verify=False
         )
 
-        logging.info(f"Updated the Confluence page '{title}'")
+        json_output = json.loads(result.text)
+        logging.info(f"{json_output=}")
+
+        if 'statusCode' in json_output and int(json_output['statusCode']) != 200:
+            rprint(f"[bold red]Encountered some error while attempting to update content of page '{title}'.  Please see the log file.[/]")
+            logging.error(f"Encountered some error while attempting to update content of page '{title}'.  Please see the log file.")
+        else:
+            logging.info(f"Updated the Confluence page '{title}'")
+            rprint(f"[green]Updated the Confluence page '{title}'[/]")
