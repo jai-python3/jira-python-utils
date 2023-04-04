@@ -354,9 +354,6 @@ def main(config_file: str, jira_id: str, logfile: str, outdir: str):
 
     if not os.path.exists(shared_jira_dir):
         print(f"Please execute the following:\n")
-
-        pathlib.Path(shared_jira_dir).mkdir(parents=True, exist_ok=True)
-
         print_yellow(f"sudo mkdir -p {shared_jira_dir}")
     else:
         print(f"'{shared_jira_dir}' already exists")
