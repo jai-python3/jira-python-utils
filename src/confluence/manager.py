@@ -98,13 +98,14 @@ class Manager:
 
         json_output = json.loads(result.text)
         logging.info(f"json_output: {json_output}")
-        pid = json_output['results'][0]['id']
+        pid = None
 
-        if json_output['results']:
+        if json_output['results'] and len(json_output["results"]) > 0 and "id" in json_output["results"][0]:
+            pid = json_output['results'][0]['id']
             print(f"Page with title '{title}' and page ID '{pid}' in home space '{self.config['confluence']['home_space']}' already exists so will update it")
             logging.info(f"Page with title '{title}' and page ID '{pid}' in home space '{self.config['confluence']['home_space']}' already exists so will update it")
         else:
-            self._create_page(headers, auth, parent_page_id, title, content_type)
+            pid = self._create_page(headers, auth, parent_page_id, title, content_type)
 
         self.update_page(pid, headers, auth, title, html_content)
 
