@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Top-level package for JIRA Python Utils."""
 
 __author__ = """Jai Python3"""

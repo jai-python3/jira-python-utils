@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import logging
 import os
 import pathlib
@@ -47,7 +48,7 @@ LOG_LEVEL = logging.INFO
 
 def get_auth_jira(credential_file: str, url: str):
     """Instantiate the JIRA object.
-    
+
     Args:
         credential_file (str): the credentials file
         url: the REST URL
@@ -58,14 +59,14 @@ def get_auth_jira(credential_file: str, url: str):
     username, password = get_username_password(credential_file)
 
     options = {
-        'server': url, 
+        'server': url,
         'verify': False
     }
 
     print(f"options: {options}")
 
     auth_jira = JIRA(
-        options=options, 
+        options=options,
         basic_auth=(username, password)
     )
 
@@ -118,13 +119,12 @@ def check_rest_url_file(rest_url_file: str) -> None:
 
 def check_credential_file(credential_file: str) -> None:
     """Check the JIRA credential file.
-    
+
     The file should contain a single line:
     username:password
 
     Args:
         credential_file (str): the path to the credential file
-    
     """
     if not os.path.exists(credential_file):
         print_red(f"credential file '{credential_file}' does not exist")
@@ -162,6 +162,7 @@ def check_config_file(config_file: str) -> None:
 
 def print_red(msg: str = None) -> None:
     """Print message to STDOUT in yellow text.
+
     :param msg: {str} - the message to be printed
     """
     if msg is None:
@@ -172,6 +173,7 @@ def print_red(msg: str = None) -> None:
 
 def print_green(msg: str = None) -> None:
     """Print message to STDOUT in yellow text.
+
     :param msg: {str} - the message to be printed
     """
     if msg is None:
@@ -182,6 +184,7 @@ def print_green(msg: str = None) -> None:
 
 def print_yellow(msg: str = None) -> None:
     """Print message to STDOUT in yellow text.
+
     :param msg: {str} - the message to be printed
     """
     if msg is None:
@@ -208,7 +211,7 @@ def main(assignee: str, config_file: str, credential_file: str, logfile: str, ou
         credential_file = DEFAULT_CREDENTIAL_FILE
 
     check_credential_file(credential_file)
-    
+
     error_ctr = 0
 
     # if not query:
@@ -238,7 +241,7 @@ def main(assignee: str, config_file: str, credential_file: str, logfile: str, ou
     if config_file is None:
         config_file = DEFAULT_CONFIG_FILE
         print_yellow(f"--config_file was not specified and therefore was set to '{config_file}'")
-    
+
     check_config_file(config_file)
 
     logging.basicConfig(filename=logfile, format=LOGGING_FORMAT, level=LOG_LEVEL)
@@ -262,7 +265,7 @@ def main(assignee: str, config_file: str, credential_file: str, logfile: str, ou
     if links is None or links == '' or len(links) == 0:
         print_red(f"Did not find any epic links in the configuration file '{config_file}'")
         sys.exit(1)
-    
+
     logging.info(f"Found '{len(links)}' epic links in the configuration file '{config_file}'")
 
     auth_jira = get_auth_jira(credential_file, url)
@@ -282,7 +285,7 @@ def main(assignee: str, config_file: str, credential_file: str, logfile: str, ou
 
         try:
             issues = auth_jira.search_issues(query)
-            
+
         except Exception as e:
             print_red(f"Encountered some exception while attempting to query with JQL '{query}' : '{e}'")
             sys.exit(1)

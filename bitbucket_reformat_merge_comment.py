@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import logging
 import os
 import pathlib
@@ -26,9 +27,9 @@ LOG_LEVEL = logging.INFO
 
 def reformat_content(infile: str, logfile: str, outdir: str, outfile: str) -> None:
     logging.info(f"Will read file '{infile}'")
-    
+
     lines = None
-    
+
     with open(infile, 'r') as f:
         lines = f.readlines()
 
@@ -94,6 +95,7 @@ def check_infile(infile: str) -> None:
 
 def print_red(msg: str = None) -> None:
     """Print message to STDOUT in yellow text.
+
     :param msg: {str} - the message to be printed
     """
     if msg is None:
@@ -104,6 +106,7 @@ def print_red(msg: str = None) -> None:
 
 def print_green(msg: str = None) -> None:
     """Print message to STDOUT in yellow text.
+
     :param msg: {str} - the message to be printed
     """
     if msg is None:
@@ -114,6 +117,7 @@ def print_green(msg: str = None) -> None:
 
 def print_yellow(msg: str = None) -> None:
     """Print message to STDOUT in yellow text.
+
     :param msg: {str} - the message to be printed
     """
     if msg is None:
@@ -129,7 +133,7 @@ def print_yellow(msg: str = None) -> None:
 @click.option('--outfile', help="The output file")
 def main(infile: str, logfile: str, outdir: str, outfile: str):
 
-    
+
     error_ctr = 0
 
     if infile is None:

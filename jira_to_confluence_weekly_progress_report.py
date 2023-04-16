@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import logging
 import os
 import pathlib
@@ -48,7 +49,7 @@ def get_resolved_issues(start_date, end_date, assignee, auth_jira) -> List[Any]:
     if assignee is not None:
         query = f"""{query} AND assignee in ({assignee})"""
         logging.info(f"Added assignee '{assignee}' to the query: {query}")
-        
+
     return get_issues(query, auth_jira)
 
 
@@ -77,7 +78,7 @@ def get_issues(query, auth_jira) -> List[Any]:
 
     try:
         issues = auth_jira.search_issues(query)
-        
+
     except Exception as e:
         print_red(f"Encountered some exception while attempting to query with JQL '{query}' : '{e}'")
         sys.exit(1)
@@ -94,7 +95,7 @@ def get_jira_issue_base_url(config) -> str:
 
     if jira_issue_base_url.endswith('/'):
         jira_issue_base_url = jira_issue_base_url.rstrip('/')
-    
+
     return jira_issue_base_url
 
 
@@ -105,19 +106,20 @@ def get_weekly_ranges(config, config_file: str) -> List[Dict[str, str]]:
         sys.exit(1)
 
     return config['jira']['weekly']
-    
+
 
 def create_html_content(
-    jira_issue_base_url: str, 
-    title: str, 
-    issues: List[Any], 
+    jira_issue_base_url: str,
+    title: str,
+    issues: List[Any],
     config: Dict[str, Any]) -> str:
-    """Create the HTML table that will be inserted into the new Confluence page."""
+    """Create the HTML table that will be inserted into the new Confluence
+    page."""
     in_development_color = config['confluence']['status']['color_codes']['in_development']
     done_color = config['confluence']['status']['color_codes']['done']
 
     logging.info(f"Will add '{len(issues)}' issues to the HTML table for Confluence page with title '{title}'")
-    
+
     content = []
     content.append(f"<html><body><h3>{title}</h3>")
     content.append("""<table>
@@ -153,7 +155,7 @@ def create_html_content(
 
 def get_auth_jira(credential_file: str, url: str):
     """Instantiate the JIRA object.
-    
+
     Args:
         credential_file (str): the credentials file
         url: the REST URL
@@ -164,14 +166,14 @@ def get_auth_jira(credential_file: str, url: str):
     username, password = get_username_password(credential_file)
 
     options = {
-        'server': url, 
+        'server': url,
         'verify': False
     }
 
     logging.info(f"options: {options}")
 
     auth_jira = JIRA(
-        options=options, 
+        options=options,
         basic_auth=(username, password)
     )
 
@@ -226,13 +228,12 @@ def check_rest_url_file(rest_url_file: str) -> None:
 
 def check_credential_file(credential_file: str) -> None:
     """Check the JIRA credential file.
-    
+
     The file should contain a single line:
     username:password
 
     Args:
         credential_file (str): the path to the credential file
-    
     """
     if not os.path.exists(credential_file):
         print_red(f"credential file '{credential_file}' does not exist")
@@ -270,6 +271,7 @@ def check_config_file(config_file: str) -> None:
 
 def print_red(msg: str = None) -> None:
     """Print message to STDOUT in yellow text.
+
     :param msg: {str} - the message to be printed
     """
     if msg is None:
@@ -280,6 +282,7 @@ def print_red(msg: str = None) -> None:
 
 def print_green(msg: str = None) -> None:
     """Print message to STDOUT in yellow text.
+
     :param msg: {str} - the message to be printed
     """
     if msg is None:
@@ -290,6 +293,7 @@ def print_green(msg: str = None) -> None:
 
 def print_yellow(msg: str = None) -> None:
     """Print message to STDOUT in yellow text.
+
     :param msg: {str} - the message to be printed
     """
     if msg is None:
@@ -316,7 +320,7 @@ def main(assignee: str, config_file: str, credential_file: str, logfile: str, ou
         credential_file = DEFAULT_CREDENTIAL_FILE
 
     check_credential_file(credential_file)
-    
+
     error_ctr = 0
 
     if error_ctr > 0:
@@ -342,7 +346,7 @@ def main(assignee: str, config_file: str, credential_file: str, logfile: str, ou
     if config_file is None:
         config_file = DEFAULT_CONFIG_FILE
         print_yellow(f"--config_file was not specified and therefore was set to '{config_file}'")
-    
+
     check_config_file(config_file)
 
     logging.basicConfig(filename=logfile, format=LOGGING_FORMAT, level=LOG_LEVEL)
@@ -355,7 +359,7 @@ def main(assignee: str, config_file: str, credential_file: str, logfile: str, ou
         sys.exit(1)
 
     week_ranges = get_weekly_ranges(config, config_file)
-    
+
     logging.info(f"Found '{len(week_ranges)}' week ranges in the configuration file '{config_file}'")
 
     if assignee is None and 'assignee' in config['jira']:
@@ -373,23 +377,23 @@ def main(assignee: str, config_file: str, credential_file: str, logfile: str, ou
         print_yellow(f"{start_date=} {end_date=}")
 
         resolved_issues = get_resolved_issues(
-            start_date, 
-            end_date, 
-            assignee, 
+            start_date,
+            end_date,
+            assignee,
             auth_jira
         )
-        
+
         # in_development_issues = get_in_development_issues(
-        #     start_date, 
-        #     end_date, 
-        #     assignee, 
+        #     start_date,
+        #     end_date,
+        #     assignee,
         #     auth_jira
         # )
-        
+
         # on_hold_issues = get_on_hold_issues(
-        #     start_date, 
-        #     end_date, 
-        #     assignee, 
+        #     start_date,
+        #     end_date,
+        #     assignee,
         #     auth_jira
         # )
 
@@ -400,8 +404,8 @@ def main(assignee: str, config_file: str, credential_file: str, logfile: str, ou
         confluence_page_name = f"Jay's Weekly Progress Report between '{start_date}' and '{end_date}'"
 
         html_content = create_html_content(
-            jira_issue_base_url, 
-            confluence_page_name, 
+            jira_issue_base_url,
+            confluence_page_name,
             issues,
             config,
         )

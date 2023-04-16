@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 import click
@@ -34,7 +35,7 @@ def main(credential_file, issue):
     if issue is None:
         print("issue was not specified")
         sys.exit(1)
-        
+
     with open(credential_file, 'r') as f:
         line = f.readline()
         line = line.strip()
@@ -47,7 +48,7 @@ def main(credential_file, issue):
         print("Will attempt to remove username '{}' from issue '{}'".format(username, issue))
         auth_jira.remove_watcher(issue, username)
         print("Removed username '{}' from watchers for issue '{}'".format(username, issue))
-    
+
     else:
         print("Could not instantiate JIRA for url '{}'".format(url))
 

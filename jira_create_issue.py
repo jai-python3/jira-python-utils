@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 
@@ -88,7 +89,7 @@ def main(credential_file, project, summary, desc, issue_type, assignee):
         sys.exit(1)
 
     options = {
-        'server': url, 
+        'server': url,
         'verify': False
     }
 
@@ -101,10 +102,10 @@ def main(credential_file, project, summary, desc, issue_type, assignee):
 
     try:
         new_issue = auth_jira.create_issue(
-            project={'key':project}, 
-            summary=summary, 
-            issuetype={'name':issue_type}, 
-            description=desc, 
+            project={'key':project},
+            summary=summary,
+            issuetype={'name':issue_type},
+            description=desc,
             assignee={'name':assignee}
         )
 

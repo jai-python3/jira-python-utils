@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import logging
 import os
 import pathlib
@@ -60,6 +61,7 @@ def check_config_file(config_file: str) -> None:
 
 def print_red(msg: str = None) -> None:
     """Print message to STDOUT in yellow text.
+
     :param msg: {str} - the message to be printed
     """
     if msg is None:
@@ -70,6 +72,7 @@ def print_red(msg: str = None) -> None:
 
 def print_green(msg: str = None) -> None:
     """Print message to STDOUT in yellow text.
+
     :param msg: {str} - the message to be printed
     """
     if msg is None:
@@ -80,6 +83,7 @@ def print_green(msg: str = None) -> None:
 
 def print_yellow(msg: str = None) -> None:
     """Print message to STDOUT in yellow text.
+
     :param msg: {str} - the message to be printed
     """
     if msg is None:

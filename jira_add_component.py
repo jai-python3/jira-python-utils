@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 import click
@@ -13,8 +14,7 @@ DEFAULT_CREDENTIAL_FILE = os.environ['HOME'] + '/.jira/credentials.txt'
 @click.option('--issue', help='The JIRA issue')
 @click.option('--comp', help='The JIRA component')
 def main(credential_file, issue, comp):
-    """Add component to JIRA issue
-    """
+    """Add component to JIRA issue."""
 
     rest_url_file = DEFAULT_URL_FILE
     if not os.path.exists(rest_url_file):

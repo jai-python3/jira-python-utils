@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 import logging
 import os
@@ -64,11 +65,11 @@ class Manager:
         self.space_key = self.config['confluence']['space_key']
 
     def create_page(
-        self, 
-        auth: Union[Tuple[str, str], None] = None, 
-        parent_page_id: int = None, 
-        content_type: str = DEFAULT_CONTENT_TYPE, 
-        title: str = None, 
+        self,
+        auth: Union[Tuple[str, str], None] = None,
+        parent_page_id: int = None,
+        content_type: str = DEFAULT_CONTENT_TYPE,
+        title: str = None,
         html_content: str = None) -> List[str]:
         """Create the Confluence page for the Jira epic."""
         if parent_page_id is None:
@@ -84,14 +85,14 @@ class Manager:
         }
 
         params = {
-            'spaceKey': self.space_key, 
+            'spaceKey': self.space_key,
             'title': title
         }
 
         result = requests.get(
             self.rest_api_url,
-            headers=headers, 
-            auth=auth, 
+            headers=headers,
+            auth=auth,
             params=params,
             verify=False
         )
@@ -109,11 +110,11 @@ class Manager:
 
         self.update_page(pid, headers, auth, title, html_content)
 
-    def _create_page(self, 
-    headers, 
-    auth, 
-    parent_page_id: int, 
-    title: str, 
+    def _create_page(self,
+    headers,
+    auth,
+    parent_page_id: int,
+    title: str,
     content_type: str) -> int:
         print(f"Page with title '{title}' does not exist in home space '{self.config['confluence']['home_space']}', so will create it now")
         logging.info(f"Page with title '{title}' does not exist in home space '{self.config['confluence']['home_space']}', so will create it now")
@@ -121,14 +122,14 @@ class Manager:
         data = {
             'title': title,
             'type': content_type,
-            'space': {'key': self.space_key}, 
+            'space': {'key': self.space_key},
             'ancestors': [{'id': parent_page_id}] # ID of the parent page
         }
 
         result = requests.post(
             self.rest_api_url,
-            headers=headers, 
-            auth=auth, 
+            headers=headers,
+            auth=auth,
             json=data,
             verify=False
         )
@@ -144,13 +145,13 @@ class Manager:
 
         logging.info(f"Page with title '{title}' has created and assigned pagd ID '{pid}'")
         print(f"Page with title '{title}' has created and assigned pagd ID '{pid}'")
-            
+
         return pid
 
-    def update_page(self, 
-    pid: int, headers: Dict[str,str], 
-    auth, 
-    title: str, 
+    def update_page(self,
+    pid: int, headers: Dict[str,str],
+    auth,
+    title: str,
     html_content: str) -> None:
 
         logging.info(f"Will attempt to retrieve content for page with ID '{pid}'")

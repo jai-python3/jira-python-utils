@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 import click
@@ -30,8 +31,7 @@ g_issues = []
 
 
 def create_issue_software_release():
-    """Create a new JIRA issue for the 'software release'
-    """
+    """Create a new JIRA issue for the 'software release'."""
     summary = "software release for {} {} on {}".format(g_codebase, g_version, g_server)
     description = "Need to install software release.\ncode-base: {}\nversion: {}\nserver(s): {}".format(g_codebase, g_version, g_server)
     labels = ['software-release', 'install-server:' + g_server, g_codebase + '-' + g_version, g_codebase]
@@ -39,8 +39,7 @@ def create_issue_software_release():
 
 
 def create_issue_test_cases_software():
-    """Create a new JIRA issue for the 'test cases'
-    """
+    """Create a new JIRA issue for the 'test cases'."""
     summary = "test cases for {} {}".format(g_codebase, g_version)
     description = "Identify and collect test cases.\ncode-base: {}\nversion: {}".format(g_codebase, g_version)
     labels = ['test-cases', g_codebase + '-' + g_version, g_codebase]
@@ -48,8 +47,7 @@ def create_issue_test_cases_software():
 
 
 def create_issue_install_software():
-    """Create a new JIRA issue for the 'install software'
-    """
+    """Create a new JIRA issue for the 'install software'."""
     summary = "install software release for {} {} on {}".format(g_codebase, g_version, g_server)
     description = "Need to install software release.\ncode-base: {}\nversion: {}\nserver(s): {}".format(g_codebase, g_version, g_server)
     labels = ['software-release', 'install-server:' + g_server, g_codebase + '-' + g_version, g_codebase]
@@ -57,8 +55,7 @@ def create_issue_install_software():
 
 
 def create_issue_establish_release_candidate():
-    """Create a new JIRA issue for the 'establish release candidate'
-    """
+    """Create a new JIRA issue for the 'establish release candidate'."""
     summary = "establish next software release candidate for {} {}".format(g_codebase, g_version)
     description = "Need to establish the next software release candidate.\ncode-base: {}\nversion: {}".format(g_codebase, g_version)
     labels = ['establish-release-candidate', g_codebase + '-' + g_version, g_codebase]
@@ -66,8 +63,7 @@ def create_issue_establish_release_candidate():
 
 
 def create_issue_prepare_change_control():
-    """Create a new JIRA issue for 'prepare change control'
-    """
+    """Create a new JIRA issue for 'prepare change control'."""
     summary = "prepare change control to install {} {} on {}".format(g_codebase, g_version, g_server)
     description = "Need to prepare a change control in 123Compliance and DocuSign to install a software release.\ncode-base: {}\nversion: {}\nserver(s): {}".format(g_codebase, g_version, g_server)
     labels = ['prepare-change-control', 'install-server:' + g_server, g_codebase + '-' + g_version, g_codebase]
@@ -75,8 +71,7 @@ def create_issue_prepare_change_control():
 
 
 def  create_issue_prepare_validation_docs():
-    """Create a new JIRA issue for 'prepare validation documents'
-    """
+    """Create a new JIRA issue for 'prepare validation documents'."""
     summary = "prepare validation documents for {} {} on {}".format(g_codebase, g_version, g_server)
     description = "Need to prepare validation documents for a software release.\ncode-base: {}\nversion: {}\nserver(s): {}".format(g_codebase, g_version, g_server)
     labels = ['prepare-validation-documents', g_codebase + '-' + g_version, g_codebase]
@@ -84,8 +79,7 @@ def  create_issue_prepare_validation_docs():
 
 
 def create_issue_execute_validation_checks():
-    """Create a new JIRA issue for 'execute validation checks'
-    """
+    """Create a new JIRA issue for 'execute validation checks'."""
     summary = "execution validation checks for {} {} on {}".format(g_codebase, g_version, g_server)
     description = "Need to execute validation checks for a software release.\ncode-base: {}\nversion: {}\nserver(s): {}".format(g_codebase, g_version, g_server)
     labels = ['execute-validation-checks', 'install-server:' + g_server, g_codebase + '-' + g_version, g_codebase]
@@ -93,8 +87,7 @@ def create_issue_execute_validation_checks():
 
 
 def create_issue_collect_release_documents():
-    """Create a new JIRA issue for 'collect release documents'
-    """
+    """Create a new JIRA issue for 'collect release documents'."""
     summary = "collect release documents for {} {} on {}".format(g_codebase, g_version, g_server)
     description = "Need to prepare the binder coverpage and collect all release documents (change control and validation documents) for the software release.\ncode-base: {}\nversion: {}\nserver(s): {}".format(g_codebase, g_version, g_server)
     labels = ['collect-release-documents', 'install-server:' + g_server, g_codebase + '-' + g_version, g_codebase]
@@ -112,7 +105,8 @@ def create_issue_collect_release_documents():
 
 
 def create_issue(summary, description, labels=None):
-    """Create a new JIRA issue
+    """Create a new JIRA issue.
+
     :param summary: {str} the JIRA issue summary
     :param description: {str} the new JIRA issue description
     :param labels: {list} the labels that should be applied to the new JIRA issue
@@ -222,7 +216,6 @@ def create_issue(summary, description, labels=None):
 def main(credential_file, project, codebase, version, server, assignee, component, all):
     """Create the standard set of JIRA issues.
 
-
     If executed with --all option, will create issues for all of the following:
 
         establish release candidate
@@ -238,7 +231,6 @@ def main(credential_file, project, codebase, version, server, assignee, componen
         prepare test cases
 
         collect release documents
-
     """
 
     rest_url_file = DEFAULT_URL_FILE

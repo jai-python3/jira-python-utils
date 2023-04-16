@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Console script for jira_python_utils."""
 import sys
 import click

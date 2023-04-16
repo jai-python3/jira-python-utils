@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import os
 import sys
 import click
@@ -23,8 +24,9 @@ DEFAULT_INTERACTIVE_MODE = False
 @click.option('--issue', help='The JIRA issue identifier e.g.: JP-478')
 @click.option('--interactive', is_flag=True, help='Run in interactive mode')
 def main(change_control_id, credential_file, config_file, compliance123_base_url, docusign_base_url, issue, interactive):
-    """Will insert a comment in the specified JIRA issue like this:
-    Change control [CR-01958|123Compliance_root_URL/base_URL_for_this_change_control/] has been prepared in 123Compliance.
+    """Will insert a comment in the specified JIRA issue like this: Change
+    control [CR-01958|123Compliance_root_URL/base_URL_for_this_change_control/]
+    has been prepared in 123Compliance.
 
     Change control has been prepared in DocuSign and sent to the following individuals for signatures:
 
