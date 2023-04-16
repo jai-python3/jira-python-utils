@@ -28,6 +28,15 @@ LOGGING_FORMAT = "%(levelname)s : %(asctime)s : %(pathname)s : %(lineno)d : %(me
 LOG_LEVEL = logging.INFO
 
 
+def create_jira_director(jira_dir: str) -> None:
+    if not os.path.exists(jira_dir):
+        pathlib.Path(jira_dir).mkdir(parents=True, exist_ok=True)
+
+        print(f"Created directory '{jira_dir}'")
+    else:
+        print(f"'{jira_dir}' already exists")
+
+
 def check_config_file(config_file: str) -> None:
     """Check the configuration file."""
     if not os.path.exists(config_file):
@@ -124,20 +133,11 @@ def main(config_file: str, jira_id: str, logfile: str, outdir: str):
     config = yaml.safe_load(pathlib.Path(config_file).read_text())
 
     jira_dir = os.path.join(os.getenv("HOME"), "JIRA", jira_id)
-    if not os.path.exists(jira_dir):
-        pathlib.Path(jira_dir).mkdir(parents=True, exist_ok=True)
-
-        print(f"Created directory '{jira_dir}'")
-    else:
-        print(f"'{jira_dir}' already exists")
+    create_jira_director(jira_dir)
 
     shared_jira_dir = os.path.join(os.getenv("HOME"), "vboxshare", "JIRA", jira_id)
+    create_jira_director(shared_jira_dir)
 
-    if not os.path.exists(shared_jira_dir):
-        print(f"Please execute the following:\n")
-        print_yellow(f"sudo mkdir -p {shared_jira_dir}")
-    else:
-        print(f"'{shared_jira_dir}' already exists")
 
 if __name__ == '__main__':
 
