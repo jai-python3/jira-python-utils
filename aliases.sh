@@ -9,5 +9,6 @@ alias jira-regenerate-confluence-epic-pages="~/.tools/jira-python-utils/jira_epi
 alias jira-generate-weekly-progress-pages="~/.tools/jira-python-utils/jira_to_confluence_weekly_progress_report.sh "
 alias jira-sync-workspace="~/.tools/jira-python-utils/jira_sync_workspace.sh "
 alias jira-initiate-workspace="~/.tools/jira-python-utils/jira_initiate_workspace.sh "
+alias jira-start-task="~/.tools/jira-python-utils/jira_start_task.sh "
 alias bitbucket_reformat_merge_comment="~/.tools/jira-python-utils/bitbucket_reformat_merge_comment.sh "
 alias show-jira-python-utils-aliases="grep '^alias' $0 | grep -v show-jira-python-utils-aliases | sed 's/^alias //' | sed 's/=\"/ -> /' | sed 's/\"$//'"
