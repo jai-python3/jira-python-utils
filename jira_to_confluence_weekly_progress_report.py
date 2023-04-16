@@ -370,6 +370,7 @@ def main(assignee: str, config_file: str, credential_file: str, logfile: str, ou
 
         start_date = week_range['start_date']
         end_date = week_range['end_date']
+        print_yellow(f"{start_date=} {end_date=}")
 
         resolved_issues = get_resolved_issues(
             start_date, 
