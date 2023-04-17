@@ -1,13 +1,28 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-import click
 
+import click
 from jira import JIRA
 
-DEFAULT_URL_FILE = os.path.dirname(__file__) + '/conf/jira_rest_url.txt'
+DEFAULT_URL_FILE = os.environ['HOME'] + '/.jira/jira_rest_url.txt'
 
 DEFAULT_CREDENTIAL_FILE = os.environ['HOME'] + '/.jira/credentials.txt'
+
+
+
+def get_jira_url() -> str:
+    rest_url_file = DEFAULT_URL_FILE
+    if not os.path.exists(rest_url_file):
+        print("JIRA REST URL file '{}' does not exist".format(rest_url_file))
+        sys.exit(1)
+    else:
+        with open(rest_url_file, 'r') as f:
+            url = f.readline()
+            url = url.strip()
+            print("read the REST URL from file '{}'".format(rest_url_file))
+    print(f"Retrieved URL '{url}' from '{rest_url_file}'")
+    return url
 
 
 @click.command()
@@ -19,23 +34,15 @@ def main(credential_file, comment, comment_file, issue):
     """ISSUE : string - the JIRA issue identifier e.g.: RA-478
     """
 
-    rest_url_file = DEFAULT_URL_FILE
-    if not os.path.exists(rest_url_file):
-        print("JIRA REST URL file '{}' does not exist".format(rest_url_file))
-        sys.exit(1)
-    else:
-        with open(rest_url_file, 'r') as f:
-            url = f.readline()
-            url = url.strip()
-            print("read the REST URL from file '{}'".format(rest_url_file))
-
     if comment is None and comment_file is None:
         print("--comment and --comment_file were not specified")
         sys.exit(1)
 
-    if comment is '':
+    if comment == '':
         print("You must provide some test for the comment")
         sys.exit(1)
+
+    url = get_jira_url()
 
     if comment_file is not None:
         with open(comment_file, 'r') as cf:
@@ -58,7 +65,15 @@ def main(credential_file, comment, comment_file, issue):
         (username, password) = line.split(':')
         print("read username and password from credentials file")
 
-    auth_jira = JIRA(url, basic_auth=(username, password))
+    options = {
+        'server': url,
+        'verify': False
+    }
+
+    auth_jira = JIRA(options=options, basic_auth=(username, password))
+    if auth_jira is None:
+        print("Could not instantiate JIRA for url '{}'".format(url))
+        sys.exit(1)
 
     if auth_jira is not None:
         print("Will attempt to add comment '{}' to issue '{}'".format(comment, issue))
