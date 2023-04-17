@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
-source ${HOME}/jira-python-utils/venv/bin/activate
-python ~/jira-python-utils/jira_add_label.py "$@"
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+. $SCRIPT_DIR/venv/bin/activate
+python $SCRIPT_DIR/jira_add_label.py "$@"
