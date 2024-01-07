@@ -11,7 +11,11 @@ with open('README.rst') as readme_file:
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
-requirements = ['Click>=7.0', ]
+requirements = [
+    'Click>=7.0',
+    "Rich",
+    "jira"
+]
 
 setup_requirements = ['pytest-runner', ]
 
@@ -35,7 +39,24 @@ setup(
     description="Collection of Python utils for interacting with JIRA",
     entry_points={
         'console_scripts': [
-            'jira_python_utils=jira_python_utils.cli:main',
+            "bitbucket-reformat-merge-comment=jira_python_utils.bitbucket_reformat_merge_comment:main",
+            "jira-add-change-control-comment=jira_python_utils.jira_add_change_control_comment:main",
+            "jira-add-comment=jira_python_utils.jira_add_comment:main",
+            "jira-add-component=jira_python_utils.jira_add_component:main",
+            "jira-add-label=jira_python_utils.jira_add_label:main",
+            "jira-assign-issue=jira_python_utils.jira_assign_issue:main",
+            "jira-convert-task-session-script-to-readme=jira_python_utils.jira_convert_task_session_script_to_readme:main",
+            "jira-create-issue=jira_python_utils.jira_create_issue:main",
+            "jira-create-release-software-issues=jira_python_utils.jira_create_release_software_issues:main",
+            "jira-epics-to-confluence-tables=jira_python_utils.jira_epics_to_confluence_tables:main",
+            "jira-get-issue-details=jira_python_utils.jira_get_issue_details:main",
+            "jira-initiate-workspace=jira_python_utils.jira_initiate_workspace:main",
+            "jira-link-issues=jira_python_utils.jira_link_issues:main",
+            "jira-remove-watcher=jira_python_utils.jira_remove_watcher:main",
+            "jira-search-issues=jira_python_utils.jira_search_issues:main",
+            "jira-start-task=jira_python_utils.jira_start_task:main",
+            "jira-sync-workspace=jira_python_utils.jira_sync_workspace:main",
+            "jira-to-confluence-weekly-progress-report=jira_python_utils.jira_to_confluence_weekly_progress_report:main",
         ],
     },
     install_requires=requirements,
@@ -45,6 +66,7 @@ setup(
     keywords='jira_python_utils',
     name='jira_python_utils',
     packages=find_packages(include=['jira_python_utils', 'jira_python_utils.*']),
+    scripts=["scripts/generate_executables_and_aliases.py"],
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
