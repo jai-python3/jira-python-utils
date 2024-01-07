@@ -1,24 +1,25 @@
 # -*- coding: utf-8 -*-
+import click
 import logging
 import os
 import pathlib
 import sys
-from datetime import datetime
-from typing import Any, Dict, List, Tuple
 
-import click
-from colorama import Fore, Style
+from datetime import datetime
+
+
+from .console_helper import print_red, print_yellow
 
 DEFAULT_JIRA_ISSUE_PREFIXES = ['PTB', 'RGCCIDM']
 
-TIMESTAMP = str(datetime.today().strftime('%Y-%m-%d-%H%M%S'))
+DEFAULT_TIMESTAMP = str(datetime.today().strftime('%Y-%m-%d-%H%M%S'))
 
 DEFAULT_OUTDIR = os.path.join(
     '/tmp/',
+    os.getenv('USER'),
     os.path.splitext(os.path.basename(__file__))[0],
-    TIMESTAMP
+    DEFAULT_TIMESTAMP
 )
-
 
 LOGGING_FORMAT = "%(levelname)s : %(asctime)s : %(pathname)s : %(lineno)d : %(message)s"
 
@@ -72,59 +73,6 @@ def reformat_content(infile: str, logfile: str, outdir: str, outfile: str) -> No
             print(comment)
 
 
-def check_infile(infile: str) -> None:
-    """Check the input file."""
-    if not os.path.exists(infile):
-        print_red(f"input file '{infile}' does not exist")
-        sys.exit(1)
-
-    if not os.path.isfile(infile):
-        print_red(f"input file '{infile}' is not a regular file")
-        sys.exit(1)
-
-    if not infile.endswith(".txt"):
-        print_red(
-            f"input file '{infile}' does not have a .txt file extension"
-        )
-        sys.exit(1)
-
-    if os.path.getsize(infile) == 0:
-        print_red(f"input file'{infile}' has no content")
-        sys.exit(1)
-
-
-def print_red(msg: str = None) -> None:
-    """Print message to STDOUT in yellow text.
-
-    :param msg: {str} - the message to be printed
-    """
-    if msg is None:
-        raise Exception("msg was not defined")
-
-    print(Fore.RED + msg + Style.RESET_ALL)
-
-
-def print_green(msg: str = None) -> None:
-    """Print message to STDOUT in yellow text.
-
-    :param msg: {str} - the message to be printed
-    """
-    if msg is None:
-        raise Exception("msg was not defined")
-
-    print(Fore.GREEN + msg + Style.RESET_ALL)
-
-
-def print_yellow(msg: str = None) -> None:
-    """Print message to STDOUT in yellow text.
-
-    :param msg: {str} - the message to be printed
-    """
-    if msg is None:
-        raise Exception("msg was not defined")
-
-    print(Fore.YELLOW + msg + Style.RESET_ALL)
-
 
 @click.command()
 @click.option('--infile', help='The file containing the raw Bitbucket merge text')
@@ -132,8 +80,6 @@ def print_yellow(msg: str = None) -> None:
 @click.option('--outdir', help=f"The default is the current working directory - default is '{DEFAULT_OUTDIR}'")
 @click.option('--outfile', help="The output file")
 def main(infile: str, logfile: str, outdir: str, outfile: str):
-
-
     error_ctr = 0
 
     if infile is None:
@@ -142,6 +88,7 @@ def main(infile: str, logfile: str, outdir: str, outfile: str):
 
     if error_ctr > 0:
         print("Required parameter(s) not defined")
+        click.echo(click.get_current_context().get_help())
         sys.exit(1)
 
     if outdir is None:
@@ -150,7 +97,6 @@ def main(infile: str, logfile: str, outdir: str, outfile: str):
 
     if not os.path.exists(outdir):
         pathlib.Path(outdir).mkdir(parents=True, exist_ok=True)
-
         print_yellow(f"Created output directory '{outdir}'")
 
     if logfile is None:
@@ -167,7 +113,11 @@ def main(infile: str, logfile: str, outdir: str, outfile: str):
         )
         print_yellow(f"--outfile was not specified and therefore was set to '{outfile}'")
 
-    logging.basicConfig(filename=logfile, format=LOGGING_FORMAT, level=LOG_LEVEL)
+    logging.basicConfig(
+        filename=logfile,
+        format=LOGGING_FORMAT,
+        level=LOG_LEVEL
+    )
 
     reformat_content(infile, logfile, outdir, outfile)
 

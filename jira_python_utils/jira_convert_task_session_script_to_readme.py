@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
+import click
 import logging
 import os
 import pathlib
 import sys
+
 from datetime import datetime
-from typing import Any, Dict, List, Tuple
+from typing import List
 
-import click
-import yaml
-from colorama import Fore, Style
-from jira import JIRA
+from .console_helper import print_red, print_yellow
+from .file_utils import check_infile_status
 
-TIMESTAMP = str(datetime.today().strftime('%Y-%m-%d-%H%M%S'))
-
+DEFAULT_TIMESTAMP = str(datetime.today().strftime('%Y-%m-%d-%H%M%S'))
 
 DEFAULT_COMMAND_PROMPT = "➜"
+
 DEFAULT_COMMAND_START = "✗"
 
 DEFAULT_URL_FILE = os.path.join(
@@ -23,16 +23,11 @@ DEFAULT_URL_FILE = os.path.join(
     'jira_rest_url.txt'
 )
 
-
 DEFAULT_OUTDIR = os.path.join(
     '/tmp/',
+    os.getenv("USER"),
     os.path.splitext(os.path.basename(__file__))[0],
-    TIMESTAMP
-)
-
-DEFAULT_CONFIG_FILE = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    'conf/jira_weekly_updates_config.yaml'
+    DEFAULT_TIMESTAMP
 )
 
 LOGGING_FORMAT = "%(levelname)s : %(asctime)s : %(pathname)s : %(lineno)d : %(message)s"
@@ -47,7 +42,6 @@ def get_file_content(infile: str, command_prompt: str = DEFAULT_COMMAND_PROMPT, 
     command_start = command_start.lstrip()
 
     logging.info(f"{command_prompt=} {command_start=}")
-    # sys.exit(1)
 
     logging.info(f"Will read file '{infile}'")
     line_ctr = 0
@@ -118,7 +112,7 @@ def convert_file(infile: str, outfile: str, jira_id: str, verbose: bool = DEFAUL
 
 def echo_script(jira_id: str, jira_dir: str) -> None:
     print("Execute this when ready to start:")
-    outfile = os.path.join(jira_dir, f"script_{TIMESTAMP}.txt")
+    outfile = os.path.join(jira_dir, f"script_{DEFAULT_TIMESTAMP}.txt")
     print_yellow(f"script -q {outfile}")
     print_yellow(f"echo 'Starting task {jira_id}'")
 
@@ -178,80 +172,6 @@ def initialize_jira_directory(jira_id: str, verbose: bool = DEFAULT_VERBOSE) -> 
     return jira_dir
 
 
-def check_config_file(config_file: str) -> None:
-    """Check the configuration file."""
-    if not os.path.exists(config_file):
-        print_red(f"configuration file '{config_file}' does not exist")
-        sys.exit(1)
-
-    if not os.path.isfile(config_file):
-        print_red(f"configuration file '{config_file}' is not a regular file")
-        sys.exit(1)
-
-    if not config_file.endswith(".yaml"):
-        print_red(
-            f"configuration file '{config_file}' does not have a .yaml file extension"
-        )
-        sys.exit(1)
-
-    if os.path.getsize(config_file) == 0:
-        print_red(f"configuration file '{config_file}' has no content")
-        sys.exit(1)
-
-
-def check_infile_status(infile: str) -> None:
-    """Check the status of the input file."""
-    if not os.path.exists(infile):
-        print_red(f"infile '{infile}' does not exist")
-        sys.exit(1)
-
-    if not os.path.isfile(infile):
-        print_red(f"infile '{infile}' is not a regular file")
-        sys.exit(1)
-
-    if not infile.endswith(".txt"):
-        print_red(
-            f"infile '{infile}' does not have a .txt file extension"
-        )
-        sys.exit(1)
-
-    if os.path.getsize(infile) == 0:
-        print_red(f"infile '{infile}' has no content")
-        sys.exit(1)
-
-
-def print_red(msg: str = None) -> None:
-    """Print message to STDOUT in yellow text.
-
-    :param msg: {str} - the message to be printed
-    """
-    if msg is None:
-        raise Exception("msg was not defined")
-
-    print(Fore.RED + msg + Style.RESET_ALL)
-
-
-def print_green(msg: str = None) -> None:
-    """Print message to STDOUT in yellow text.
-
-    :param msg: {str} - the message to be printed
-    """
-    if msg is None:
-        raise Exception("msg was not defined")
-
-    print(Fore.GREEN + msg + Style.RESET_ALL)
-
-
-def print_yellow(msg: str = None) -> None:
-    """Print message to STDOUT in yellow text.
-
-    :param msg: {str} - the message to be printed
-    """
-    if msg is None:
-        raise Exception("msg was not defined")
-
-    print(Fore.YELLOW + msg + Style.RESET_ALL)
-
 
 @click.command()
 @click.option('--config_file', type=click.Path(exists=True), help=f"The configuration file - default is '{DEFAULT_CONFIG_FILE}'")
@@ -259,7 +179,7 @@ def print_yellow(msg: str = None) -> None:
 @click.option('--jira_id', help='The Jira ticket identifier')
 @click.option('--logfile', help="The log file")
 @click.option('--outdir', help=f"The default is the current working directory - default is '{DEFAULT_OUTDIR}'")
-@click.option('--outfile', help=f"The output README file")
+@click.option('--outfile', help="The output README file")
 @click.option('--verbose', is_flag=True, help=f"Will print more info to STDOUT - default is '{DEFAULT_VERBOSE}'")
 def main(config_file: str, infile: str, jira_id: str, logfile: str, outdir: str, outfile: str, verbose: bool):
 
@@ -285,7 +205,6 @@ def main(config_file: str, infile: str, jira_id: str, logfile: str, outdir: str,
 
     if not os.path.exists(outdir):
         pathlib.Path(outdir).mkdir(parents=True, exist_ok=True)
-
         print_yellow(f"Created output directory '{outdir}'")
 
     if logfile is None:
@@ -299,20 +218,15 @@ def main(config_file: str, infile: str, jira_id: str, logfile: str, outdir: str,
         outfile = os.path.join(os.getenv("HOME"), "JIRA", "README.md")
         print_yellow(f"--outfile was not specified and therefore was set to '{outfile}'")
 
-    if config_file is None:
-        config_file = DEFAULT_CONFIG_FILE
-        print_yellow(f"--config_file was not specified and therefore was set to '{config_file}'")
-
-    check_config_file(config_file)
-
     if verbose is None:
         verbose = DEFAULT_VERBOSE
         print_yellow(f"--verbose was not specified and therefore was set to '{verbose}'")
 
-    logging.basicConfig(filename=logfile, format=LOGGING_FORMAT, level=LOG_LEVEL)
-
-    logging.info(f"Loading configuration from '{config_file}'")
-    config = yaml.safe_load(pathlib.Path(config_file).read_text())
+    logging.basicConfig(
+        filename=logfile,
+        format=LOGGING_FORMAT,
+        level=LOG_LEVEL
+    )
 
     convert_file(infile, outfile, jira_id, verbose)
 
