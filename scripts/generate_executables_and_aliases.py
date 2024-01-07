@@ -30,6 +30,7 @@ EXECUTABLES = [
     "jira-start-task",
     "jira-sync-workspace",
     "jira-to-confluence-weekly-progress-report",
+    "jira-scan-jira-dirs",
 ]
 
 DEFAULT_ALIAS_PREFIX = "jj"
