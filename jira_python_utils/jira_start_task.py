@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import click
 import logging
+import json
 import os
 import pathlib
 import sys
@@ -10,7 +11,7 @@ from pathlib import Path
 from datetime import datetime
 from rich.console import Console
 
-from .helper import get_jira_url, get_auth, get_summary
+from .helper import get_jira_url, get_summary
 from .file_utils import check_infile_status
 from .console_helper import print_yellow, print_red
 
@@ -112,6 +113,34 @@ def create_readme_file(jira_dir: str, jira_id: str, url: str, title: str, verbos
         if verbose:
             console.print(f"Wrote file '{outfile}'")
     console.print(f"README file is ready: '{outfile}'")
+
+
+def create_metadata_file(jira_dir: str, jira_id: str, url: str, title: str) -> None:
+    """Create a [jira_id].metadata.json file.
+
+    This will contain information about the Jira issue
+    that can be parsed by other scripts for report generation.
+
+    Args:
+        jira_dir (str): The Jira issue-specific directory.
+        jira_id (str): The Jira issue identifier.
+        url (str): The Jira issue-specific URL.
+        title (str): The summary of the Jira issue.
+    """
+    outfile = os.path.join(jira_dir, f"{jira_id}.metadata.json")
+    lookup = {
+        "jira_id": jira_id,
+        "url": url,
+        "title": title,
+        "date": str(datetime.today().strftime('%Y-%m-%d-%H:%M:%S'))
+    }
+
+    # Write lookup to JSON file
+    with open(outfile, 'w') as of:
+        json.dump(lookup, of)
+
+    logging.info(f"Wrote metadata file '{outfile}'")
+    console.print(f"Wrote metadata file '{outfile}'")
 
 
 def initialize_jira_directory(jira_root_dir: str, jira_id: str, verbose: bool = DEFAULT_VERBOSE) -> str:
@@ -226,6 +255,8 @@ def main(config_file: str, credential_file: str, jira_id: str, jira_root_dir: st
     summary = get_summary(jira_id, credential_file, rest_url_file)
 
     create_readme_file(jira_dir, jira_id, url, summary, verbose)
+
+    create_metadata_file(jira_dir, jira_id, url, summary)
 
     echo_script(jira_id, jira_dir)
 
