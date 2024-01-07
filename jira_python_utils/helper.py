@@ -120,3 +120,8 @@ def get_auth(credential_file: str, url: str):
         sys.exit(1)
 
     return auth_jira
+
+def get_summary(issue_id: str, credential_file: str, rest_url_file: str) -> str:
+    auth_jira = get_auth(credential_file, get_jira_url(rest_url_file))
+    jira_issue = auth_jira.issue(issue_id)
+    return jira_issue.fields.summary
