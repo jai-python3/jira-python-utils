@@ -1,0 +1,9 @@
+site_name: Jira Python Utils
+theme: material
+site_url: https://example.com/
+nav:
+  - Home: index.md
+  - About: about.md
+  - License: LICENSE.md
+  - Change Log: CHANGELOG.md
+  - README: README.md
