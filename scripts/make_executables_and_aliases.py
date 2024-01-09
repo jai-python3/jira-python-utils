@@ -11,6 +11,8 @@ from rich.console import Console
 from datetime import datetime
 from typing import List
 
+DEFAULT_PROJECT = "jira-python-utils"
+
 EXECUTABLES = [
     "bitbucket-reformat-merge-comment",
     "jira-add-change-control-comment",
@@ -40,7 +42,7 @@ DEFAULT_TIMESTAMP = str(datetime.today().strftime("%Y-%m-%d-%H%M%S"))
 DEFAULT_OUTDIR = os.path.join(
     "/tmp/",
     os.getenv("USER"),
-    "jira-python-utils",
+    DEFAULT_PROJECT,
     os.path.basename(__file__),
     DEFAULT_TIMESTAMP,
 )
@@ -64,7 +66,7 @@ def create_aliases_file(wrapper_scripts: List[str], outdir: str, prefix: str = D
         wrapper_scripts (List[str]): list of wrapper scripts
         outdir (str): output directory
     """
-    outfile = os.path.join(outdir, "aliases.txt")
+    outfile = os.path.join(outdir, f"{DEFAULT_PROJECT}-aliases.txt")
 
     with open(outfile, 'w') as of:
         of.write(f"## method-created: {os.path.abspath(__file__)}\n")

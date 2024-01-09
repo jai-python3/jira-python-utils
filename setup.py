@@ -67,7 +67,7 @@ setup(
     keywords='jira_python_utils',
     name='jira_python_utils',
     packages=find_packages(include=['jira_python_utils', 'jira_python_utils.*']),
-    scripts=["scripts/generate_executables_and_aliases.py"],
+    scripts=["scripts/make_executables_and_aliases.py"],
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
