@@ -31,11 +31,11 @@ Please see the [INSTALL](INSTALL.md) guide for instructions.
 
 ## Generate shell wrapper scripts
 
-After executing `pip install jira-python-utils`, execute `make_executables_and_aliases.py`.<br>
+After executing `pip install jira-python-utils`, execute this exported script: `make_executables_and_aliases.py`.<br>
 This will create the wrapper shell scripts and a file containing aliases named `jira-python-utils-aliases.txt` in the current directory.<br><br>
-You can then add this line to your .bashrc or .zshrc:<br>
+You can then add this line to your `.bashrc` or `.zshrc`:<br>
 `source dir/jira-python-utils-aliases.txt`<br>
-where dir is the directory that contains the aliases.txt file.
+where dir is the directory that contains the aliases file.
 
 
 ## Exported scripts
