@@ -71,7 +71,7 @@ setup(
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://github.com/jai-python3/jira_python_utils',
+    url='https://github.com/jai-python3/jira-python-utils',
     version='0.4.0',
     zip_safe=False,
 )
