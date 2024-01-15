@@ -4,10 +4,7 @@ This repository houses a versatile collection of Python utility scripts designed
 
 ## Commands
 
-* `mkdocs new [dir-name]` - Create a new project.
-* `mkdocs serve` - Start the live-reloading docs server.
-* `mkdocs build` - Build the documentation site.
-* `mkdocs -h` - Print help message and exit.
+The following exported scripts are available:
 
 ## References
 
