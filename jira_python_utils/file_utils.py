@@ -1,3 +1,16 @@
+"""
+A collection of utility functions for file management and data integrity.
+
+Functions:
+- calculate_md5(file_path): Calculate the MD5 hash of a file specified by its path.
+- check_indir_status(indir=None): Check the status of a directory, providing information on its existence and contents.
+- check_infile_status(infile, extension=None): Check the status of a file, including its existence and optionally validate its extension.
+- get_file_creation_date(file_path): Retrieve the creation date of a file specified by its path.
+
+Use these functions to enhance file handling and data validation in your Python projects.
+"""
+
+
 import hashlib
 import logging
 import os

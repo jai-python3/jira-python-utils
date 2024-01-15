@@ -26,7 +26,7 @@ Please see the [TODO](TODO.md) for a list of upcoming improvements.
 
 ## Installation
 
-Please see the [INSTALL](INSTALL.md) guide for instructions.
+Please see the [INSTALL](docs/INSTALL.md) guide for instructions.
 
 
 ## Generate shell wrapper scripts

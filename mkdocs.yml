@@ -1,9 +1,19 @@
 site_name: Jira Python Utils
-theme: material
-site_url: https://example.com/
+# dev_addr: 127.0.0.1:8081
+theme:
+  name: material
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      # python:
+      handlers:
+        python:
+          paths: [jira_python_utils]
+        # import_root: jira_python_utils
+        # import_root: jira-python-utils
 nav:
   - Home: index.md
-  - About: about.md
-  - License: LICENSE.md
-  - Change Log: CHANGELOG.md
-  - README: README.md
+  - Installation: INSTALL.md
+  - Code Reference:
+    - File Utililities: file_utils.md
