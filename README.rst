@@ -6,27 +6,39 @@ JIRA Python Utils
 .. image:: https://img.shields.io/pypi/v/jira_python_utils.svg
         :target: https://pypi.python.org/pypi/jira_python_utils
 
-.. image:: https://img.shields.io/travis/jai-python3/jira_python_utils.svg
-        :target: https://travis-ci.org/jai-python3/jira_python_utils
-
-.. image:: https://readthedocs.org/projects/jira-python-utils/badge/?version=latest
-        :target: https://jira-python-utils.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
-
-
 
 
 Collection of Python utils for interacting with JIRA
 
 
 * Free software: GNU General Public License v3
-* Documentation: https://jira-python-utils.readthedocs.io.
+* Documentation: https://jai-python3.github.io/jira-python-utils/
 
 
 Features
 --------
 
-* TODO
+The following exported scripts are available:
+
+- bitbucket-reformat-merge-comment
+- jira-add-change-control-comment
+- jira-add-comment
+- jira-add-component
+- jira-add-label
+- jira-assign-issue
+- jira-convert-task-session-script-to-readme
+- jira-create-issue
+- jira-create-release-software-issues
+- jira-epics-to-confluence-tables
+- jira-get-issue-details
+- jira-initiate-workspace
+- jira-link-issues
+- jira-remove-watcher
+- jira-search-issues
+- jira-start-task
+- jira-sync-workspace
+- jira-to-confluence-weekly-progress-report
+
 
 Credits
 -------
