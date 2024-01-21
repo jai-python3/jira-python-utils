@@ -1,3 +1,9 @@
+## [v0.5.0](https://github.com/jai-python3/data-file-utils/tree/v0.5.0) - 2024-01-16
+
+* UPDATES:
+  - updates the documentation using mkdocs
+  - updates the content published to PYPI project page
+
 ## [v0.2.0](https://github.com/jai-python3/data-file-utils/tree/v0.2.0) - 2024-01-07
 
 * ADDS:
