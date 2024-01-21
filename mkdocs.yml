@@ -30,35 +30,34 @@ plugins:
   - search
   - mkdocstrings:
       default_handler: python
-      # python:
       handlers:
         python:
           paths: [jira_python_utils]
-        # import_root: jira_python_utils
-        # import_root: jira-python-utils
 nav:
   - Home: index.md
   - Installation: INSTALL.md
   - Code Reference:
-    - File Utililities: file_utils.md
-
-
-markdown_extensions:
-  - pymdownx.highlight:
-      anchor_linenums: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - admonition
-  - pymdownx.arithmatex:
-      generic: true
-  - footnotes
-  - pymdownx.details
-  - pymdownx.superfences
-  - pymdownx.mark
-  - attr_list
-  - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
-
-copyright: |
-  &copy; 2024 <a href="https://github.com/jai-python3"  target="_blank" rel="noopener">Jai Python3</a>
+  # INSERT CODE REFERENCE SECTION
+    - Add Change Control Comment: jira_add_change_control_comment.md
+    - Add Comment: jira_add_comment.md
+    - Add Component: jira_add_component.md
+    - Add Label: jira_add_label.md
+    - Assign Issue: jira_assign_issue.md
+    - Bitbucket Reformat Merge Comment: bitbucket_reformat_merge_comment.md
+    - Console Helper: console_helper.md
+    - Convert Task Session Script To Readme: jira_convert_task_session_script_to_readme.md
+    - Create Issue: jira_create_issue.md
+    - Create Release Software Issues: jira_create_release_software_issues.md
+    - Epics To Confluence Tables: jira_epics_to_confluence_tables.md
+    - File Utils: file_utils.md
+    - Get Issue Details: jira_get_issue_details.md
+    - Helper: helper.md
+    - Initiate Workspace: jira_initiate_workspace.md
+    - Link Issues: jira_link_issues.md
+    - Remove Watcher: jira_remove_watcher.md
+    - Scan Jira Dirs: scan_jira_dirs.md
+    - Search Issues: jira_search_issues.md
+    - Start Task: jira_start_task.md
+    - Sync Workspace: jira_sync_workspace.md
+    - To Confluence Weekly Progress Report: jira_to_confluence_weekly_progress_report.md
+    # - Manager: confluence/manager.md
