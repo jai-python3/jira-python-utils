@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Assign a JIRA issue to a user."""
 import os
 import sys
 import click
@@ -22,8 +23,13 @@ DEFAULT_CREDENTIAL_FILE = os.environ['HOME'] + '/.jira/credentials.txt'
 @click.option('--assignee', help='username to be assigned to issue (default will be username specified in credential file)')
 @click.argument('issue')
 def main(credential_file: str, assignee: str, issue: str):
-    """ISSUE : string - the JIRA issue identifier e.g.: RA-478"""
+    """Assign a JIRA issue to a user.
 
+    Args:
+        credential_file (str): The credential file containing username and password.
+        assignee (str): The Jira username to be assigned to the issue.
+        issue (str): The Jira issue identifier e.g.: JP-478.
+    """
     if issue is None:
         error_console.print("issue was not specified")
         click.echo(click.get_current_context().get_help())

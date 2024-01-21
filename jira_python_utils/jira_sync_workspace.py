@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Synchronize the Jira workspace with the shared Jira workspace."""
 import click
 import filecmp
 import logging
@@ -8,17 +9,19 @@ import sys
 import yaml
 
 from datetime import datetime
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from .console_helper import print_red, print_yellow
 from .file_utils import check_infile_status
 
+DEFAULT_PROJECT = "jira-python-utils"
 
 DEFAULT_TIMESTAMP = str(datetime.today().strftime('%Y-%m-%d-%H%M%S'))
 
 DEFAULT_OUTDIR = os.path.join(
     '/tmp/',
     os.getenv('USER'),
+    DEFAULT_PROJECT,
     os.path.splitext(os.path.basename(__file__))[0],
     DEFAULT_TIMESTAMP
 )
@@ -64,6 +67,14 @@ def get_file_list(indir: str = None, extension: str = None) -> list:
 
 
 def get_files_lookup(indir: str) -> Dict[str, str]:
+    """Get the lookup of files in the specified directory.
+
+    Args:
+        indir (str): The directory to search for files.
+
+    Returns:
+        Dict[str, str]: The lookup of files found in the directory.
+    """
     file_list = get_file_list(indir)
     lookup = {}
     for f in file_list:
@@ -75,6 +86,16 @@ def get_files_lookup(indir: str) -> Dict[str, str]:
     return lookup
 
 def sync_directories(shared_jira_dir, jira_dir, config, config_file, logfile, outfile) -> None:
+    """Synchronize the two directories.
+
+    Args:
+        shared_jira_dir (_type_): The shared Jira directory.
+        jira_dir (_type_): The Jira directory.
+        config (_type_): The configuration object.
+        config_file (_type_): The configuration file.
+        logfile (_type_): The log file.
+        outfile (_type_): The output file.
+    """
     jira_dir_lookup = get_files_lookup(jira_dir)
     logging.info(f"{jira_dir_lookup=}")
 
@@ -126,6 +147,18 @@ def sync_directories(shared_jira_dir, jira_dir, config, config_file, logfile, ou
 
 
 def prepare_commands(source_lookup: Dict[str, str], target_lookup: Dict[str, str], source_dir: str, target_dir: str, cmds: List[str]) -> List[str]:
+    """Prepare the commands to synchronize the two directories.
+
+    Args:
+        source_lookup (Dict[str, str]): The lookup of files in the source directory.
+        target_lookup (Dict[str, str]): The lookup of files in the target directory.
+        source_dir (str): The source directory.
+        target_dir (str): The target directory.
+        cmds (List[str]): The list of commands to execute.
+
+    Returns:
+        List[str]: The list of commands to execute.
+    """
     for filekey, filepath in source_lookup.items():
         if filekey not in target_lookup:
             logging.info(f"Will copy '{filepath}' to '{target_dir}'")
@@ -162,7 +195,16 @@ def prepare_commands(source_lookup: Dict[str, str], target_lookup: Dict[str, str
 @click.option('--logfile', help="The log file")
 @click.option('--outdir', help=f"The default is the current working directory - default is '{DEFAULT_OUTDIR}'")
 @click.option('--outfile', help="The output file")
-def main(config_file: str, jira_id: str, logfile: str, outdir: str, outfile: str):
+def main(config_file: Optional[str], jira_id: str, logfile: Optional[str], outdir: Optional[str], outfile: Optional[str]):
+    """Synchronize the Jira workspace with the shared Jira workspace.
+
+    Args:
+        config_file (Optional[str]): The configuration file.
+        jira_id (str): The Jira ticket identifier.
+        logfile (Optional[str]): The log file.
+        outdir (Optional[str]): The output directory.
+        outfile (Optional[str]): The output file.
+    """
 
     error_ctr = 0
 

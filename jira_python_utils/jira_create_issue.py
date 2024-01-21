@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Create a JIRA issue."""
 import os
 import sys
 import click
@@ -34,6 +35,16 @@ DEFAULT_ASSIGNEE = 'jsundaram'
 @click.option('--issue_type', help='The issue type e.g.: bug')
 @click.option('--assignee', help='The assignee')
 def main(credential_file: str, project: str, summary: str, desc: str, issue_type: str, assignee: str):
+    """Create a JIRA issue.
+
+    Args:
+        credential_file (str): The credential file containing username and password.
+        project (str): The JIRA project key.
+        summary (str): The summary i.e.: the title of the issue.
+        desc (str): The description of the issue.
+        issue_type (str): The issue type e.g.: bug.
+        assignee (str): The assignee.
+    """
 
     rest_url_file = DEFAULT_URL_FILE
     check_infile_status(rest_url_file)

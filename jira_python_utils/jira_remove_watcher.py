@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Remove account from JIRA watchers."""
 import os
 import sys
 import click
@@ -23,6 +24,13 @@ DEFAULT_CREDENTIAL_FILE = os.environ['HOME'] + '/.jira/credentials.txt'
 @click.option('--username', help='the username - default will be retrieve from the credential file')
 @click.argument('issue')
 def main(credential_file: str, username: str, issue: str):
+    """Remove account from JIRA watchers.
+
+    Args:
+        credential_file (str): The credential file containing username and password.
+        username (str): The username that should be removed from watchers - default will be retrieve from the credential file.
+        issue (str): The Jira issue identifier e.g.: RA-478
+    """
 
     rest_url_file = DEFAULT_URL_FILE
     check_infile_status(rest_url_file)

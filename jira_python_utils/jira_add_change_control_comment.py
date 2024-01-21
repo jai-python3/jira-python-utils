@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
+"""Add a comment to a JIRA issue with the change control information."""
 import os
 import sys
 import click
 import json
+
+from typing import Optional
+
 
 from .helper import get_jira_url, get_auth
 from .file_utils import check_infile_status
@@ -31,9 +35,20 @@ DEFAULT_INTERACTIVE_MODE = False
 @click.option('--docusign_base_url', help='The DocuSign URL base for the change control')
 @click.option('--issue', help='The JIRA issue identifier e.g.: JP-478')
 @click.option('--interactive', is_flag=True, help='Run in interactive mode')
-def main(change_control_id: str, credential_file: str, config_file: str, compliance123_base_url: str, docusign_base_url: str, issue: str, interactive: bool):
-    """Will insert a comment in the specified JIRA issue like this: Change
-    control [CR-01958|123Compliance_root_URL/base_URL_for_this_change_control/]
+def main(change_control_id: str, credential_file: Optional[str], config_file: Optional[str], compliance123_base_url: str, docusign_base_url: str, issue: str, interactive: Optional[bool]):
+    """Add change control content to a Jira ticket.
+
+    Args:
+        change_control_id (str): The change control identifier.
+        credential_file (Optional[str]): The credential file containing username and password.
+        config_file (Optional[str]): The config ini file.
+        compliance123_base_url (str): The 123Compliance URL base for change control.
+        docusign_base_url (str): The DocuSign URL base for the change control.
+        issue (str): The JIRA issue identifier e.g.: JP-478.
+        interactive (Optional[bool]): Run in interactive mode.
+
+    This will insert a comment in the specified JIRA issue like this:
+    Change control [CR-01958|123Compliance_root_URL/base_URL_for_this_change_control/]
     has been prepared in 123Compliance.
 
     Change control has been prepared in DocuSign and sent to the following individuals for signatures:

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Add a comment to the Jira issue."""
 import os
 import sys
 
@@ -25,7 +26,14 @@ DEFAULT_CREDENTIAL_FILE = os.environ['HOME'] + '/.jira/credentials.txt'
 @click.option('--comment_file', help='file containing the text to be added as a comment to the specified issue')
 @click.argument('issue')
 def main(credential_file: str, comment: str, comment_file: str, issue: str):
-    """ISSUE : string - the JIRA issue identifier e.g.: RA-478"""
+    """Add a comment to the Jira issue.
+
+    Args:
+        credential_file (str): credential file containing username and password - default is '~/.jira/credentials.txt'
+        comment (str): text to be added as a comment to the specified issue
+        comment_file (str): file containing the text to be added as a comment to the specified issue
+        issue (str): the issue id
+    """
 
     error_ctr = 0
 

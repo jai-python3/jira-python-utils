@@ -1,4 +1,9 @@
 # -*- coding: utf-8 -*-
+"""Add a component to a JIRA issue.
+
+Raises:
+    Exception: Raised if there is a problem emitted by the API.
+"""
 import os
 import sys
 import click
@@ -22,7 +27,16 @@ DEFAULT_CREDENTIAL_FILE = os.environ['HOME'] + '/.jira/credentials.txt'
 @click.option('--issue', help='The JIRA issue')
 @click.option('--comp', help='The JIRA component')
 def main(credential_file, issue, comp):
-    """Add component to JIRA issue."""
+    """Add a component to a JIRA issue.
+
+    Args:
+        credential_file (str): The credential file containing username and password.
+        issue (str): The Jira issue identifier e.g.: JP-478.
+        comp (str): The Jira component.
+
+    Raises:
+        Exception: Raised if there is a problem emitted by the API.
+    """
 
     rest_url_file = DEFAULT_URL_FILE
     check_infile_status(rest_url_file)
@@ -60,7 +74,7 @@ def main(credential_file, issue, comp):
         if i is None:
             raise Exception(f"Could not retrieve issue object for issue '{issue}'")
 
-        # comp = 'elio plasma resolve'
+        # comp = 'report automation'
         i.fields.components.append({'name': comp})
         i.update(fields={'components': i.fields.components})
 

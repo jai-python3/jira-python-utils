@@ -55,10 +55,18 @@ def get_username_password(credential_file: str) -> Tuple[str,str]:
 
 
 def get_rest_url(rest_url_file: str) -> str:
+    """Get the REST URL from the file.
+
+    Args:
+        rest_url_file (str): The path to the file containing the REST URL.
+
+    Returns:
+        str: The REST URL.
+    """
     with open(rest_url_file, 'r') as f:
         url = f.readline()
         url = url.strip()
-        console.print(f"read the REST URL from file '{rest_url_file}'")
+        console.print(f"Retrieved the REST URL from file '{rest_url_file}'")
     return url
 
 
@@ -75,6 +83,14 @@ def get_jira_url(rest_url_file: str) -> str:
 
 
 def get_credentials(credential_file: str) -> (str, str):
+    """Parse the credential file and retrieve the username and password.
+
+    Args:
+        credential_file (str): The credential file.
+
+    Returns:
+        Tuple[str,str]: The username and password.
+    """
     with open(credential_file, 'r') as f:
         line = f.readline()
         line = line.strip()
@@ -105,7 +121,15 @@ def get_username(credential_file: str) -> str:
 
 
 def get_auth(credential_file: str, url: str):
+    """Instantiate the JIRA object.
 
+    Args:
+        credential_file (str): the credentials file
+        url: the REST URL
+
+    Returns:
+        JIRA: The JIRA class instance
+    """
     username, password = get_credentials(credential_file)
 
     options = {

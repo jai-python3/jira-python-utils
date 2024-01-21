@@ -14,6 +14,8 @@ from .console_helper import print_red, print_yellow
 from .helper import get_auth_jira, get_rest_url
 from .confluence.manager import Manager as ConfluenceManager
 
+DEFAULT_PROJECT = "jira-python-utils"
+
 DEFAULT_URL_FILE = os.path.join(
     os.getenv("HOME"),
     '.jira',
@@ -31,6 +33,7 @@ TIMESTAMP = str(datetime.today().strftime('%Y-%m-%d-%H%M%S'))
 DEFAULT_OUTDIR = os.path.join(
     '/tmp/',
     os.getenv("USER"),
+    DEFAULT_PROJECT,
     os.path.splitext(os.path.basename(__file__))[0],
     TIMESTAMP
 )
@@ -47,6 +50,15 @@ LOG_LEVEL = logging.INFO
 
 
 def get_jira_epic_links(config, config_file: str) -> List[Dict[str, str]]:
+    """Get the JIRA epic links from the configuration file.
+
+    Args:
+        config (_type_): The configuration object.
+        config_file (str): The configuration file.
+
+    Returns:
+        List[Dict[str, str]]: The list of epic links.
+    """
 
     if 'epics' not in config['jira']:
         print_red(f"'epics' section does not exist in configuration file '{config_file}'")
@@ -69,8 +81,14 @@ def create_html_content(
     epic_name: str,
     issues: List[Any],
     config: Dict[str, Any]) -> str:
-    """Create the HTML table that will be inserted into the new Confluence
-    page."""
+    """Create the HTML content for the Confluence page.
+
+    Args:
+        jira_issue_base_url (str): The JIRA issue base url.
+        epic_name (str): The epic name.
+        issues (List[Any]): The list of issues.
+        config (Dict[str, Any]): The configuration object.
+    """
     in_development_color = config['confluence']['status']['color_codes']['in_development']
     done_color = config['confluence']['status']['color_codes']['done']
 
@@ -115,6 +133,7 @@ def create_html_content(
 @click.option('--outdir', help=f"The default is the current working directory - default is '{DEFAULT_OUTDIR}'")
 @click.option('--query', help='The Jira jql query string')
 def main(assignee: str, config_file: str, credential_file: str, logfile: str, outdir: str, query: str):
+    """Retrieve JIRA issues for epics and create Confluence pages."""
 
     rest_url_file = DEFAULT_URL_FILE
     check_infile_status(rest_url_file, "txt")

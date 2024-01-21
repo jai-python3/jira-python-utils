@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""This script will reformat the content of the Bitbucket merge comment."""
 import click
 import logging
 import os
@@ -10,13 +11,16 @@ from datetime import datetime
 
 from .console_helper import print_red, print_yellow
 
-DEFAULT_JIRA_ISSUE_PREFIXES = ['PTB', 'RGCCIDM']
+DEFAULT_PROJECT = "jira-python-utils"
+
+DEFAULT_JIRA_ISSUE_PREFIXES = ['BIO', 'SYN-BIO']
 
 DEFAULT_TIMESTAMP = str(datetime.today().strftime('%Y-%m-%d-%H%M%S'))
 
 DEFAULT_OUTDIR = os.path.join(
     '/tmp/',
     os.getenv('USER'),
+    DEFAULT_PROJECT,
     os.path.splitext(os.path.basename(__file__))[0],
     DEFAULT_TIMESTAMP
 )
@@ -26,7 +30,12 @@ LOGGING_FORMAT = "%(levelname)s : %(asctime)s : %(pathname)s : %(lineno)d : %(me
 LOG_LEVEL = logging.INFO
 
 
-def reformat_content(infile: str, logfile: str, outdir: str, outfile: str) -> None:
+def reformat_content(infile: str) -> None:
+    """Reformat the content of the Bitbucket merge comment.
+
+    Args:
+        infile (str): The file containing the raw Bitbucket merge text.
+    """
     logging.info(f"Will read file '{infile}'")
 
     lines = None
@@ -51,7 +60,7 @@ def reformat_content(infile: str, logfile: str, outdir: str, outfile: str) -> No
         line = line.strip()
         if line == '':
             continue
-        elif line.startswith('PTB-') or line.startswith('RGCCIDM-'):
+        elif line.startswith('BIO-') or line.startswith('SYN-BIO-'):
             current_issue_id = line.strip()
             if current_issue_id not in unique_issue_id_lookup:
                 issue_id_list.append(current_issue_id)
@@ -80,6 +89,14 @@ def reformat_content(infile: str, logfile: str, outdir: str, outfile: str) -> No
 @click.option('--outdir', help=f"The default is the current working directory - default is '{DEFAULT_OUTDIR}'")
 @click.option('--outfile', help="The output file")
 def main(infile: str, logfile: str, outdir: str, outfile: str):
+    """The main function.
+
+    Args:
+        infile (str): The file containing the raw Bitbucket merge text.
+        logfile (str): The log file.
+        outdir (str): The output directory.
+        outfile (str): The output file.
+    """
     error_ctr = 0
 
     if infile is None:

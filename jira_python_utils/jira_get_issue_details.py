@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Get the JIRA issue details."""
 import os
 import sys
 import click

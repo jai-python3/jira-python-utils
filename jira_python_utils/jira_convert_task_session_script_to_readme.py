@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Convert a script session file to a README file."""
 import click
 import logging
 import os
@@ -10,6 +11,8 @@ from typing import List
 
 from .console_helper import print_red, print_yellow
 from .file_utils import check_infile_status
+
+DEFAULT_PROJECT = "jira-python-utils"
 
 DEFAULT_TIMESTAMP = str(datetime.today().strftime('%Y-%m-%d-%H%M%S'))
 
@@ -26,6 +29,7 @@ DEFAULT_URL_FILE = os.path.join(
 DEFAULT_OUTDIR = os.path.join(
     '/tmp/',
     os.getenv("USER"),
+    DEFAULT_PROJECT,
     os.path.splitext(os.path.basename(__file__))[0],
     DEFAULT_TIMESTAMP
 )
@@ -38,6 +42,16 @@ DEFAULT_VERBOSE = False
 
 
 def get_file_content(infile: str, command_prompt: str = DEFAULT_COMMAND_PROMPT, command_start: str = DEFAULT_COMMAND_START) -> List[str]:
+    """Read the file and return the content as a list of lists.
+
+    Args:
+        infile (str): The input file absolute path.
+        command_prompt (str, optional): The command prompt string. Defaults to DEFAULT_COMMAND_PROMPT.
+        command_start (str, optional): The command start string. Defaults to DEFAULT_COMMAND_START.
+
+    Returns:
+        List[str]: The content of the file as a list of lists.
+    """
     command_prompt = command_prompt.lstrip()
     command_start = command_start.lstrip()
 
@@ -73,6 +87,11 @@ def get_file_content(infile: str, command_prompt: str = DEFAULT_COMMAND_PROMPT, 
 
 
 def include() -> bool:
+    """Prompt the user to include the command in the README.
+
+    Returns:
+        bool: True if the user wants to include the command in the README, False otherwise.
+    """
     ans = input("Include this command in the README? [Y/n] ")
     ans = ans.strip()
     if ans == '' or ans.lower() == 'y':
@@ -80,6 +99,7 @@ def include() -> bool:
     return False
 
 def get_description() -> str:
+    """Prompt the user for a description of the command."""
     desc = None
     while desc is None or desc == '':
         desc = input("What is the description? ")
@@ -87,7 +107,16 @@ def get_description() -> str:
     return desc
 
 def convert_file(infile: str, outfile: str, jira_id: str, verbose: bool = DEFAULT_VERBOSE, command_prompt: str = DEFAULT_COMMAND_PROMPT, command_start: str = DEFAULT_COMMAND_START) -> None:
+    """Convert the input file to a README file.
 
+    Args:
+        infile (str): The input file absolute path.
+        outfile (str): The output file absolute path.
+        jira_id (str): The Jira issue id.
+        verbose (bool, optional): Will print more info to STDOUT. Defaults to DEFAULT_VERBOSE.
+        command_prompt (str, optional): The command prompt string. Defaults to DEFAULT_COMMAND_PROMPT.
+        command_start (str, optional): The command start string. Defaults to DEFAULT_COMMAND_START.
+    """
     content = get_file_content(infile, command_prompt, command_start)
 
     with open(outfile, 'w') as of:
@@ -111,6 +140,12 @@ def convert_file(infile: str, outfile: str, jira_id: str, verbose: bool = DEFAUL
 
 
 def echo_script(jira_id: str, jira_dir: str) -> None:
+    """Start the script command.
+
+    Args:
+        jira_id (str): The Jira issue id.
+        jira_dir (str): The directory where the script file will be written.
+    """
     print("Execute this when ready to start:")
     outfile = os.path.join(jira_dir, f"script_{DEFAULT_TIMESTAMP}.txt")
     print_yellow(f"script -q {outfile}")
@@ -118,6 +153,12 @@ def echo_script(jira_id: str, jira_dir: str) -> None:
 
 
 def create_symlink_directory(jira_dir: str, verbose: bool = DEFAULT_VERBOSE) -> None:
+    """Create the symlink to the Jira issue directory.
+
+    Args:
+        jira_dir (str): The Jira issue directory.
+        verbose (bool, optional): If True print info to STDOUT. Defaults to DEFAULT_VERBOSE.
+    """
 
     target_dir = os.path.join(os.getenv("HOME"), "JIRA", os.path.basename(jira_dir))
 
@@ -135,6 +176,14 @@ def create_symlink_directory(jira_dir: str, verbose: bool = DEFAULT_VERBOSE) -> 
 
 
 def create_readme_file(jira_dir: str, jira_id: str, url: str, verbose: bool = DEFAULT_VERBOSE) -> None:
+    """Create the README file.
+
+    Args:
+        jira_dir (str): The Jira issue directory.
+        jira_id (str): The Jira issue id.
+        url (str): The Jira issue URL.
+        verbose (bool, optional): If true print more info to STDOUT. Defaults to DEFAULT_VERBOSE.
+    """
     outfile = os.path.join(jira_dir, "README.md")
     if not os.path.exists(outfile):
         with open(outfile, 'w') as of:
@@ -182,6 +231,17 @@ def initialize_jira_directory(jira_id: str, verbose: bool = DEFAULT_VERBOSE) -> 
 @click.option('--outfile', help="The output README file")
 @click.option('--verbose', is_flag=True, help=f"Will print more info to STDOUT - default is '{DEFAULT_VERBOSE}'")
 def main(config_file: str, infile: str, jira_id: str, logfile: str, outdir: str, outfile: str, verbose: bool):
+    """Convert a script session file to a README file.
+
+    Args:
+        config_file (str): The configuration file.
+        infile (str): The input script session file.
+        jira_id (str): The Jira ticket identifier.
+        logfile (str): The log file.
+        outdir (str): The output directory.
+        outfile (str): The output README file.
+        verbose (bool): The verbose flag.
+    """
 
     error_ctr = 0
 
@@ -195,6 +255,7 @@ def main(config_file: str, infile: str, jira_id: str, logfile: str, outdir: str,
 
     if error_ctr > 0:
         print("Required parameter(s) not defined")
+        click.echo(click.get_current_context().get_help())
         sys.exit(1)
 
     check_infile_status(infile)

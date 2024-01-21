@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Initiate the JIRA workspace."""
 import click
 import logging
 import os
@@ -12,12 +13,14 @@ console = Console()
 
 from console_helper import print_red, print_yellow
 
+DEFAULT_PROJECT = "jira-python-utils"
 
 DEFAULT_TIMESTAMP = str(datetime.today().strftime('%Y-%m-%d-%H%M%S'))
 
 DEFAULT_OUTDIR = os.path.join(
     '/tmp/',
     os.getenv("USER"),
+    DEFAULT_PROJECT,
     os.path.splitext(os.path.basename(__file__))[0],
     DEFAULT_TIMESTAMP
 )
@@ -29,6 +32,11 @@ LOG_LEVEL = logging.INFO
 
 
 def create_jira_directory(jira_dir: str) -> None:
+    """Create the JIRA directory if it does not exist.
+
+    Args:
+        jira_dir (str): The JIRA directory.
+    """
     if not os.path.exists(jira_dir):
         pathlib.Path(jira_dir).mkdir(parents=True, exist_ok=True)
 
@@ -42,7 +50,13 @@ def create_jira_directory(jira_dir: str) -> None:
 @click.option('--logfile', help="The log file")
 @click.option('--outdir', help=f"The default is the current working directory - default is '{DEFAULT_OUTDIR}'")
 def main(jira_id: str, logfile: str, outdir: str):
+    """Initiate the JIRA workspace.
 
+    Args:
+        jira_id (str): The JIRA ticket identifier.
+        logfile (str): The log file.
+        outdir (str): The output directory.
+    """
     error_ctr = 0
 
     if jira_id is None:

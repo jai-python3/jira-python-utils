@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Start a Jira task."""
 import click
 import logging
 import json
@@ -7,9 +8,10 @@ import pathlib
 import sys
 import yaml
 
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 from rich.console import Console
+from typing import Optional
 
 from .helper import get_jira_url, get_summary
 from .file_utils import check_infile_status
@@ -19,6 +21,7 @@ error_console = Console(stderr=True, style="bold red")
 
 console = Console()
 
+DEFAULT_PROJECT = "jira-python-utils"
 
 DEFAULT_TIMESTAMP = str(datetime.today().strftime('%Y-%m-%d-%H%M%S'))
 
@@ -43,6 +46,7 @@ DEFAULT_CONFIG_FILE = os.path.join(
 DEFAULT_OUTDIR = os.path.join(
     '/tmp/',
     os.getenv("USER"),
+    DEFAULT_PROJECT,
     os.path.splitext(os.path.basename(__file__))[0],
     DEFAULT_TIMESTAMP
 )
@@ -55,8 +59,13 @@ LOG_LEVEL = logging.INFO
 DEFAULT_VERBOSE = False
 
 
-
 def echo_script(jira_id: str, jira_dir: str) -> None:
+    """Echo the script command to execute when ready to start.
+
+    Args:
+        jira_id (str): The Jira issue identifier.
+        jira_dir (str): The Jira issue-specific directory.
+    """
     console.print("Execute this when ready to start:")
     outfile = os.path.join(jira_dir, f"script_{DEFAULT_TIMESTAMP}.txt")
     console.print(f"script -q {outfile}[/]")
@@ -64,6 +73,11 @@ def echo_script(jira_id: str, jira_dir: str) -> None:
 
 
 def get_home_jira_dir() -> str:
+    """Derive the Jira directory in the user's home directory.
+
+    Returns:
+        str: The Jira directory in the user's home directory.
+    """
     home_jira_dir = os.path.join(os.getenv("HOME"), "JIRA")
     if not os.path.exists(home_jira_dir):
         pathlib.Path(home_jira_dir).mkdir(parents=True, exist_ok=True)
@@ -71,6 +85,12 @@ def get_home_jira_dir() -> str:
     return home_jira_dir
 
 def create_symlink_directory(jira_dir: str, verbose: bool = DEFAULT_VERBOSE) -> None:
+    """Create a symlink to the Jira issue-specific directory in the user's home directory.
+
+    Args:
+        jira_dir (str): The Jira issue-specific directory.
+        verbose (bool, optional): If true print more info to STDOUT. Defaults to DEFAULT_VERBOSE.
+    """
 
     home_jira_dir = get_home_jira_dir()
     target_dir = os.path.join(home_jira_dir, os.path.basename(jira_dir))
@@ -176,7 +196,18 @@ def initialize_jira_directory(jira_root_dir: str, jira_id: str, verbose: bool = 
 @click.option('--logfile', help="Optional: The log file")
 @click.option('--outdir', help=f"Optional: The default is the current working directory - default is '{DEFAULT_OUTDIR}'")
 @click.option('--verbose', is_flag=True, help=f"Will print more info to STDOUT - default is '{DEFAULT_VERBOSE}'")
-def main(config_file: str, credential_file: str, jira_id: str, jira_root_dir: str, logfile: str, outdir: str, verbose: bool):
+def main(config_file: Optional[str], credential_file: Optional[str], jira_id: str, jira_root_dir: str, logfile: Optional[str], outdir: Optional[str], verbose: Optional[bool]):
+    """Start a Jira task.
+
+    Args:
+        config_file (Optional[str]): The configuration YAML file.
+        credential_file (Optional[str]): The file containing the username and password for logging into Jira.
+        jira_id (str): The Jira ticket identifier.
+        jira_root_dir (str): The root directory where your Jira issue-specific subdirectories are created.
+        logfile (Optional[str]): The log file.
+        outdir (Optional[str]): The default is the current working directory - default is '{DEFAULT_OUTDIR}'.
+        verbose (Optional[bool]): If true, print more info to STDOUT - default is '{DEFAULT_VERBOSE}'.
+    """
 
     error_ctr = 0
 

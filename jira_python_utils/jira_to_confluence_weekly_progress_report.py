@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Retrieve the list of resolved issues for the specified assignee between the start date and end date and create a Confluence page with the list of issues."""
 import click
 import logging
 import os
@@ -7,13 +8,16 @@ import sys
 import yaml
 
 from datetime import datetime
-from typing import Any, Dict, List, Tuple
+from jira import JIRA
+from typing import Any, Dict, List, Optional, Tuple
 
 from .confluence.manager import Manager as ConfluenceManager
 from .file_utils import check_infile_status
 from .console_helper import print_red, print_yellow
 from .helper import get_auth_jira, get_rest_url
 
+
+DEFAULT_PROJECT = "jira-python-utils"
 
 DEFAULT_URL_FILE = os.path.join(
     os.getenv("HOME"),
@@ -32,6 +36,7 @@ DEFAULT_TIMESTAMP = str(datetime.today().strftime('%Y-%m-%d-%H%M%S'))
 DEFAULT_OUTDIR = os.path.join(
     '/tmp/',
     os.getenv('USER'),
+    DEFAULT_PROJECT,
     os.path.splitext(os.path.basename(__file__))[0],
     DEFAULT_TIMESTAMP
 )
@@ -46,7 +51,17 @@ LOGGING_FORMAT = "%(levelname)s : %(asctime)s : %(pathname)s : %(lineno)d : %(me
 LOG_LEVEL = logging.INFO
 
 
-def get_resolved_issues(start_date, end_date, assignee, auth_jira) -> List[Any]:
+def get_resolved_issues(start_date: str, end_date: str, assignee: str, auth_jira: JIRA) -> List[Any]:
+    """Get the list of resolved issues for the specified assignee between the start date and end date.
+
+    Args:
+        start_date (str): The start date in the format 'YYYY-MM-DD'
+        end_date (str): The end date in the format 'YYYY-MM-DD'
+        assignee (str): The assignee
+        auth_jira (JIRA): The authenticated JIRA object
+    Returns:
+        List[Any]: The list of resolved issues
+    """
     query = f"""resolved >= {start_date} AND resolved <= {end_date}"""
 
     if assignee is not None:
@@ -56,7 +71,17 @@ def get_resolved_issues(start_date, end_date, assignee, auth_jira) -> List[Any]:
     return get_issues(query, auth_jira)
 
 
-def get_in_development_issues(start_date, end_date, assignee, auth_jira) -> List[Any]:
+def get_in_development_issues(start_date: str, end_date: str, assignee: str, auth_jira: JIRA) -> List[Any]:
+    """Get the list of issues that are in development for the specified assignee between the start date and end date.
+
+    Args:
+        start_date (str): The start date in the format 'YYYY-MM-DD'.
+        end_date (str): The end date in the format 'YYYY-MM-DD'.
+        assignee (str): The assignee.
+        auth_jira (JIRA): The authenticated JIRA object.
+    Returns:
+        List[Any]: The list of issues that are in development.
+    """
     query = f"""status = 'In Development' AND updated>= {start_date} AND updated <= {end_date}"""
 
     if assignee is not None:
@@ -66,7 +91,17 @@ def get_in_development_issues(start_date, end_date, assignee, auth_jira) -> List
     return get_issues(query, auth_jira)
 
 
-def get_on_hold_issues(start_date, end_date, assignee, auth_jira) -> List[Any]:
+def get_on_hold_issues(start_date: str, end_date: str, assignee: str, auth_jira: JIRA) -> List[Any]:
+    """Get the list of issues that are on hold for the specified assignee between the start date and end date.
+
+    Args:
+        start_date (str): The start date in the format 'YYYY-MM-DD'.
+        end_date (str): The end date in the format 'YYYY-MM-DD'.
+        assignee (str): The assignee.
+        auth_jira (JIRA): The authenticated JIRA object.
+    Returns:
+        List[Any]: The list of issues that are on hold.
+    """
     query = f"""status = 'On Hold' AND updated>= {start_date} AND updated <= {end_date}"""
 
     if assignee is not None:
@@ -76,7 +111,16 @@ def get_on_hold_issues(start_date, end_date, assignee, auth_jira) -> List[Any]:
     return get_issues(query, auth_jira)
 
 
-def get_issues(query, auth_jira) -> List[Any]:
+def get_issues(query: str, auth_jira: JIRA) -> List[Any]:
+    """Get the list of issues for the specified query.
+
+    Args:
+        query (str): The JQL query.
+        auth_jira (JIRA): The authenticated JIRA object.
+
+    Returns:
+        List[Any]: The list of issues.
+    """
     logging.info(f"Will attempt to retrieve issues with query '{query}'")
 
     try:
@@ -90,7 +134,15 @@ def get_issues(query, auth_jira) -> List[Any]:
     return issues
 
 
-def get_jira_issue_base_url(config) -> str:
+def get_jira_issue_base_url(config: Dict[str, Any]) -> str:
+    """Get the JIRA issue base url from the configuration file.
+
+    Args:
+        config (Dict[str, Any]): The configuration object.
+
+    Returns:
+        str: The JIRA issue base url.
+    """
     jira_issue_base_url = config['jira']['issue_base_url']
     if jira_issue_base_url is None or jira_issue_base_url == '':
         print_red("Could not find the JIRA issue base url in the configuration file")
@@ -102,7 +154,16 @@ def get_jira_issue_base_url(config) -> str:
     return jira_issue_base_url
 
 
-def get_weekly_ranges(config, config_file: str) -> List[Dict[str, str]]:
+def get_weekly_ranges(config: Dict[str, Any], config_file: str) -> List[Dict[str, str]]:
+    """Retrieve the weekly ranges from the configuration file.
+
+    Args:
+        config (Dict[str, Any]): The configuration object.
+        config_file (str): The configuration file.
+
+    Returns:
+        List[Dict[str, str]]: The list of weekly ranges.
+    """
 
     if 'weekly' not in config['jira']:
         print_red(f"'weekly' section does not exist in configuration file '{config_file}'")
@@ -117,7 +178,16 @@ def create_html_content(
     issues: List[Any],
     config: Dict[str, Any]) -> str:
     """Create the HTML table that will be inserted into the new Confluence
-    page."""
+    page.
+
+    Args:
+        jira_issue_base_url (str): The JIRA issue base url.
+        title (str): The title of the Confluence page.
+        issues (List[Any]): The list of issues.
+        config (Dict[str, Any]): The configuration object.
+    Returns:
+        str: The HTML table.
+    """
     in_development_color = config['confluence']['status']['color_codes']['in_development']
     done_color = config['confluence']['status']['color_codes']['done']
 
@@ -164,7 +234,17 @@ def create_html_content(
 @click.option('--logfile', help="The log file")
 @click.option('--outdir', help=f"The default is the current working directory - default is '{DEFAULT_OUTDIR}'")
 @click.option('--query', help='The Jira jql query string')
-def main(assignee: str, config_file: str, credential_file: str, logfile: str, outdir: str, query: str):
+def main(assignee: str, config_file: Optional[str], credential_file: Optional[str], logfile: Optional[str], outdir: Optional[str], query: str):
+    """Retrieve the list of resolved issues for the specified assignee between the start date and end date and create a Confluence page with the list of issues.
+
+    Args:
+        assignee (str): The assignee.
+        config_file (Optional[str]): The configuration file.
+        credential_file (Optional[str]): The credential file.
+        logfile (Optional[str]): The log file.
+        outdir (Optional[str]): The output directory.
+        query (str): The Jira jql query string.
+    """
 
     rest_url_file = DEFAULT_URL_FILE
     check_infile_status(rest_url_file, "txt")

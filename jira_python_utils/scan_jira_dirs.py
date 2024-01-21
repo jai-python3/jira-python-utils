@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 from datetime import datetime
 from rich.console import Console
+from typing import Optional
 
 from .file_utils import check_infile_status, check_indir_status
 from .console_helper import print_yellow, print_red
@@ -36,10 +37,14 @@ DEFAULT_VERBOSE = False
 
 
 def get_file_list(indir: str = None, extension: str = None) -> list:
-    """Get the list of files in the specified directory
-    :param indir: {str} - the directory to search for files
-    :param extension: {str} - the file extension to filter on
-    :returns file_list: {list} - the list of files found in the directory
+    """Get the list of files in the specified directory.
+
+    Args:
+        indir (str): The directory to search for files.
+        extension (str): The file extension to filter on.
+
+    Returns:
+        List[str]: The list of files found in the directory.
     """
     if extension is None:
         logging.info(f"Going to search for files in directory '{indir}'")
@@ -64,6 +69,12 @@ def get_file_list(indir: str = None, extension: str = None) -> list:
 
 
 def scan_jira_dir(jira_root_dir: str, verbose: bool = DEFAULT_VERBOSE) -> None:
+    """Scan the Jira directory and print the metadata for each Jira issue.
+
+    Args:
+        jira_root_dir (str): The root directory where your Jira issue-specific subdirectories are created.
+        verbose (bool, optional): If true, print more info to STDOUT. Defaults to DEFAULT_VERBOSE.
+    """
 
     check_indir_status(jira_root_dir, "metadata.json")
 
@@ -89,7 +100,15 @@ def scan_jira_dir(jira_root_dir: str, verbose: bool = DEFAULT_VERBOSE) -> None:
 @click.option('--logfile', help="Optional: The log file")
 @click.option('--outdir', help=f"Optional: The default is the current working directory - default is '{DEFAULT_OUTDIR}'")
 @click.option('--verbose', is_flag=True, help=f"Will print more info to STDOUT - default is '{DEFAULT_VERBOSE}'")
-def main(jira_root_dir: str, logfile: str, outdir: str, verbose: bool):
+def main(jira_root_dir: Optional[str], logfile: Optional[str], outdir: Optional[str], verbose: Optional[bool]):
+    """Scan the Jira directory and print the metadata for each Jira issue.
+
+    Args:
+        jira_root_dir (Optional[str]): The root directory where your Jira issue-specific subdirectories are created.
+        logfile (Optional[str]): The log file.
+        outdir (Optional[str]): The default is the current working directory - default is '{DEFAULT_OUTDIR}'.
+        verbose (Optional[bool]): If true, print more info to STDOUT - default is '{DEFAULT_VERBOSE}'.
+    """
 
     error_ctr = 0
 

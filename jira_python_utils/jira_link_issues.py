@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+"""Link two JIRA issues together."""
 import os
 import sys
 import click
@@ -25,6 +26,14 @@ DEFAULT_LINK_TYPE = 'relates to'
 @click.option('--parent_issue', help='The parent issue')
 @click.option('--link_type', help='The type of link')
 def main(credential_file: str, child_issue: str, parent_issue: str, link_type: str):
+    """Link two JIRA issues together.
+
+    Args:
+        credential_file (str): The credential file containing username and password.
+        child_issue (str): The child issue.
+        parent_issue (str): The parent issue.
+        link_type (str): The type of link.
+    """
 
     rest_url_file = DEFAULT_URL_FILE
     check_infile_status(rest_url_file)
