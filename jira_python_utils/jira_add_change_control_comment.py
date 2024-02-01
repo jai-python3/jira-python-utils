@@ -108,6 +108,7 @@ def main(change_control_id: str, credential_file: Optional[str], config_file: Op
 
     if error_ctr > 0:
         error_console.print("Required command-line parameters were not specified")
+        click.echo(click.get_current_context().get_help())
         sys.exit(1)
 
 
