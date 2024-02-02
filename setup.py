@@ -58,6 +58,7 @@ setup(
             "jira-sync-workspace=jira_python_utils.jira_sync_workspace:main",
             "jira-to-confluence-weekly-progress-report=jira_python_utils.jira_to_confluence_weekly_progress_report:main",
             "jira-scan-jira-dirs=jira_python_utils.scan_jira_dirs:main",
+            "jira-annotate-readme=jira_python_utils.annotate_readme:main",
         ],
     },
     install_requires=requirements,

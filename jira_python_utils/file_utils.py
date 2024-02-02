@@ -15,8 +15,9 @@ import hashlib
 import logging
 import os
 import platform
-import sys
+import shutil
 import string
+import sys
 
 from typing import Optional
 from rich.console import Console
@@ -183,3 +184,8 @@ def is_binary_file(file_path: str, block_size: int = 1024) -> bool:
         print(f"An error occurred: {e}")
         return None
 
+def backup_file(infile: str) -> str:
+    bakfile = f"{infile}.bak"
+    shutil.copy(infile, bakfile)
+    logging.info(f"Copied '{infile}' to '{bakfile}'")
+    return bakfile
