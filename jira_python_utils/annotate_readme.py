@@ -28,6 +28,17 @@ DEFAULT_OUTDIR = os.path.join(
     constants.DEFAULT_TIMESTAMP
 )
 
+def get_date(date_type: str) -> str:
+    ans = input(f"{date_type}? (YYYY-MM-DD): ")
+    if ans == "":
+        return datetime.now().strftime("%Y-%m-%d")
+    return ans
+
+def get_status() -> str:
+    status = input("Status? (e.g. In-Progress, Done, Pending, Blocked, etc.): ")
+    if status == "":
+        return "Pending"
+    return status
 
 def annotate_readme(
         jira_id: str,
@@ -64,11 +75,19 @@ def annotate_readme(
     jira_url_reference_encountered = False
     keywords_encountered = False
     codebase_encountered = False
+    date_created_encountered = False
+    due_date_encountered = False
+    date_completed_encountered = False
+    status_encountered = False
 
     jira_id_line = None
     jira_url_reference_line = None
     keywords_line = None
     codebase_line = None
+    date_created_line = None
+    due_date_line = None
+    date_completed_line = None
+    status_line = None
 
 
     line_ctr = 0
@@ -98,6 +117,30 @@ def annotate_readme(
             logging.info(f"Codebase encountered on line {line_ctr}")
             codebase_encountered = True
             codebase_line = line
+            continue
+
+        elif line.lower().startswith("date-created: "):
+            logging.info(f"Date-created encountered on line {line_ctr}")
+            date_created_encountered = True
+            date_created_line = line
+            continue
+
+        elif line.lower().startswith("date-completed: "):
+            logging.info(f"Date-completed encountered on line {line_ctr}")
+            date_completed_encountered = True
+            date_completed_line = line
+            continue
+
+        elif line.lower().startswith("due-date: "):
+            logging.info(f"Due-date encountered on line {line_ctr}")
+            due_date_encountered = True
+            due_date_line = line
+            continue
+
+        elif line.lower().startswith("status: "):
+            logging.info(f"Status encountered on line {line_ctr}")
+            status_encountered = True
+            status_line = line
             continue
 
         # Use regex to check if line starts with ## Step and then a number
@@ -141,6 +184,30 @@ def annotate_readme(
             outfile.write(f"Codebase: {codebase}\n\n")
         else:
             outfile.write(f"{codebase_line}")
+
+        if not date_created_encountered:
+            dt = get_date("date-created")
+            outfile.write(f"date-created: {dt}\n\n")
+        else:
+            outfile.write(f"{date_created_line}")
+
+        if not date_completed_encountered:
+            dt = get_date("date-completed")
+            outfile.write(f"date-completed: {dt}\n\n")
+        else:
+            outfile.write(f"{date_completed_line}")
+
+        if not due_date_encountered:
+            dt = get_date("due-date")
+            outfile.write(f"due-date: {dt}\n\n")
+        else:
+            outfile.write(f"{due_date_line}")
+
+        if not status_encountered:
+            status = get_status()
+            outfile.write(f"status: {status}\n\n")
+        else:
+            outfile.write(f"{status_line}")
 
         for line in outlines:
             outfile.write(line)
