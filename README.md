@@ -42,6 +42,7 @@ where dir is the directory that contains the aliases file.
 
 The following exported scripts are available:
 
+- annotate-readme
 - bitbucket-reformat-merge-comment
 - jira-add-change-control-comment
 - jira-add-comment
