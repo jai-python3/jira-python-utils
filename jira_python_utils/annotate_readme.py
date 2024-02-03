@@ -28,17 +28,25 @@ DEFAULT_OUTDIR = os.path.join(
     constants.DEFAULT_TIMESTAMP
 )
 
-def get_date(date_type: str) -> str:
-    ans = input(f"{date_type}? (YYYY-MM-DD): ")
+def get_date(date_type: str, current_date: str = "YYYY-MM-DD") -> str:
+    ans = input(f"{date_type}? ({current_date}): ")
     if ans == "":
         return datetime.now().strftime("%Y-%m-%d")
     return ans
+
 
 def get_status() -> str:
     status = input("Status? (e.g. In-Progress, Done, Pending, Blocked, etc.): ")
     if status == "":
         return "Pending"
     return status
+
+
+def get_issue_type() -> str:
+    issue_type = input("Issue-type? (e.g. new-feature, bugfix, data-management, config-management, etc.): ")
+    if issue_type == "":
+        return "TBD"
+    return issue_type
 
 def annotate_readme(
         jira_id: str,
@@ -79,6 +87,7 @@ def annotate_readme(
     due_date_encountered = False
     date_completed_encountered = False
     status_encountered = False
+    issue_type_encountered = False
 
     jira_id_line = None
     jira_url_reference_line = None
@@ -88,7 +97,7 @@ def annotate_readme(
     due_date_line = None
     date_completed_line = None
     status_line = None
-
+    issue_type_line = None
 
     line_ctr = 0
 
@@ -143,6 +152,12 @@ def annotate_readme(
             status_line = line
             continue
 
+        elif line.lower().startswith("issue-type: "):
+            logging.info(f"Issue-type encountered on line {line_ctr}")
+            issue_type_encountered = True
+            issue_type_line = line
+            continue
+
         # Use regex to check if line starts with ## Step and then a number
         elif re.match(r"## Step \d+", line):
             current_step += 1
@@ -185,29 +200,40 @@ def annotate_readme(
         else:
             outfile.write(f"{codebase_line}")
 
+        current_date = None
         if not date_created_encountered:
-            dt = get_date("date-created")
+            dt = get_date("date-created", current_date=current_date)
             outfile.write(f"date-created: {dt}\n\n")
+            current_date = dt
         else:
             outfile.write(f"{date_created_line}")
 
+        if not due_date_encountered:
+            dt = get_date("due-date", current_date=current_date)
+            outfile.write(f"due-date: {dt}\n\n")
+            current_date = dt
+        else:
+            outfile.write(f"{due_date_line}")
+
         if not date_completed_encountered:
-            dt = get_date("date-completed")
+            dt = get_date("date-completed", current_date=current_date)
             outfile.write(f"date-completed: {dt}\n\n")
         else:
             outfile.write(f"{date_completed_line}")
 
-        if not due_date_encountered:
-            dt = get_date("due-date")
-            outfile.write(f"due-date: {dt}\n\n")
-        else:
-            outfile.write(f"{due_date_line}")
 
         if not status_encountered:
             status = get_status()
             outfile.write(f"status: {status}\n\n")
         else:
             outfile.write(f"{status_line}")
+
+        if not issue_type_encountered:
+            issue_type = get_issue_type()
+            outfile.write(f"issue-type: {issue_type}\n\n")
+        else:
+            outfile.write(f"{issue_type_line}")
+
 
         for line in outlines:
             outfile.write(line)
