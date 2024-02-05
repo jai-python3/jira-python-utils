@@ -185,7 +185,8 @@ def is_binary_file(file_path: str, block_size: int = 1024) -> bool:
         return None
 
 def backup_file(infile: str) -> str:
-    bakfile = f"{infile}.bak"
+    timestamp = datetime.today().strftime("%Y-%m-%d-%H%M%S")
+    bakfile = f"{infile}_{timestamp}.bak"
     shutil.copy(infile, bakfile)
     logging.info(f"Copied '{infile}' to '{bakfile}'")
     return bakfile
