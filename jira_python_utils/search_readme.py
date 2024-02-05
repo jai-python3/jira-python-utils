@@ -37,6 +37,7 @@ DEFAULT_OUTDIR = os.path.join(
 )
 
 def process_readme(
+    exclude: str,
     infile: str,
     logfile: str,
     outdir: str,
@@ -45,6 +46,7 @@ def process_readme(
     """Parse the README.md and output the summary details.
 
     Args:
+        exclude (str): Comma-separated list fields to exclude from the summary details.
         infile (str): The README.md file to be analyzed.
         logfile (str): The log file.
         outdir (str): The output directory.
@@ -106,9 +108,10 @@ def process_readme(
     else:
         logging.info("Did not read any lines from file '{infile}'")
 
-    display_summary_details(lookup, infile, verbose)
+    display_summary_details(exclude, lookup, infile, verbose)
 
 def display_summary_details(
+    exclude: str,
     lookup: Dict[str, str],
     infile: str,
     verbose: bool = constants.DEFAULT_VERBOSE
@@ -116,11 +119,19 @@ def display_summary_details(
     """Display the summary details.
 
     Args:
+        exclude (str): Comma-separated list fields to exclude from the summary details.
         lookup (Dict[str, str]): The lookup dictionary containing the field and value.
         infile (str): The README.md file to be analyzed.
         verbose (bool, optional): If True, more details to STDOUT. Defaults to constants.DEFAULT_VERBOSE.
     """
+    exclude_list = None
+    if exclude:
+        exclude_list = [e.strip() for e in exclude.split(",")]
+
     for field in DEFAULT_ORDER:
+        if exclude_list and field in exclude_list:
+            logging.info(f"Excluding field '{field}'")
+            continue
         if field in lookup:
             console.print(f"{field}: {lookup[field]}")
         else:
@@ -147,11 +158,13 @@ def validate_verbose(ctx, param, value):
 
 
 @click.command()
+@click.option('--exclude', help='Optional: Comma-separated list fields to exclude from the summary details.')
 @click.option('--infile', help='Required: The README.md file to be analyzed.')
 @click.option('--logfile', help="Optional: The log file.")
 @click.option('--outdir', help=f"Optional: The default is the current working directory - default is '{DEFAULT_OUTDIR}'.")
 @click.option('--verbose', is_flag=True, help=f"Will print more info to STDOUT - default is '{constants.DEFAULT_VERBOSE}'.", callback=validate_verbose)
 def main(
+    exclude: str,
     infile: str,
     logfile: Optional[str],
     outdir: Optional[str],
@@ -200,6 +213,7 @@ def main(
     )
 
     process_readme(
+        exclude,
         infile,
         logfile,
         outdir,
