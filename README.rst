@@ -39,7 +39,7 @@ The following exported scripts are available:
 - jira-start-task
 - jira-sync-workspace
 - jira-to-confluence-weekly-progress-report
-
+- search-readme
 
 Credits
 -------
