@@ -14,6 +14,7 @@ from typing import List
 DEFAULT_PROJECT = "jira-python-utils"
 
 EXECUTABLES = [
+    "annotate-readme",
     "bitbucket-reformat-merge-comment",
     "jira-add-change-control-comment",
     "jira-add-comment",
@@ -33,6 +34,7 @@ EXECUTABLES = [
     "jira-sync-workspace",
     "jira-to-confluence-weekly-progress-report",
     "jira-scan-jira-dirs",
+    "search-readme"
 ]
 
 DEFAULT_ALIAS_PREFIX = "jj"

@@ -42,6 +42,7 @@ nav:
     - Add Comment: jira_add_comment.md
     - Add Component: jira_add_component.md
     - Add Label: jira_add_label.md
+    - Annotate README.md: annotate_readme.md
     - Assign Issue: jira_assign_issue.md
     - Bitbucket Reformat Merge Comment: bitbucket_reformat_merge_comment.md
     - Console Helper: console_helper.md
@@ -57,6 +58,7 @@ nav:
     - Remove Watcher: jira_remove_watcher.md
     - Scan Jira Dirs: scan_jira_dirs.md
     - Search Issues: jira_search_issues.md
+    - Search README.md: search_readme.md
     - Start Task: jira_start_task.md
     - Sync Workspace: jira_sync_workspace.md
     - To Confluence Weekly Progress Report: jira_to_confluence_weekly_progress_report.md

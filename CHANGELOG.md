@@ -2,6 +2,7 @@
 
 * ADDS:
 - support for annotate-readme
+- support for search-readme
 
 ## [v0.5.0](https://github.com/jai-python3/jira-python-utils/tree/v0.5.0) - 2024-01-16
 

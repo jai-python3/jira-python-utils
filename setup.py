@@ -39,6 +39,7 @@ setup(
     description="Collection of Python utils for interacting with JIRA",
     entry_points={
         'console_scripts': [
+            "annotate-readme=jira_python_utils.annotate_readme:main",
             "bitbucket-reformat-merge-comment=jira_python_utils.bitbucket_reformat_merge_comment:main",
             "jira-add-change-control-comment=jira_python_utils.jira_add_change_control_comment:main",
             "jira-add-comment=jira_python_utils.jira_add_comment:main",
@@ -59,6 +60,7 @@ setup(
             "jira-to-confluence-weekly-progress-report=jira_python_utils.jira_to_confluence_weekly_progress_report:main",
             "jira-scan-jira-dirs=jira_python_utils.scan_jira_dirs:main",
             "jira-annotate-readme=jira_python_utils.annotate_readme:main",
+            "search-readme=jira_python_utils.search_readme:main",
         ],
     },
     install_requires=requirements,

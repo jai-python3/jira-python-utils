@@ -6,7 +6,29 @@ This repository houses a versatile collection of Python utility scripts designed
 
 The following exported scripts are available:
 
+- annotate-readme
+- bitbucket-reformat-merge-comment
+- jira-add-change-control-comment
+- jira-add-comment
+- jira-add-component
+- jira-add-label
+- jira-assign-issue
+- jira-convert-task-session-script-to-readme
+- jira-create-issue
+- jira-create-release-software-issues
+- jira-epics-to-confluence-tables
+- jira-get-issue-details
+- jira-initiate-workspace
+- jira-link-issues
+- jira-remove-watcher
+- jira-search-issues
+- jira-start-task
+- jira-sync-workspace
+- jira-to-confluence-weekly-progress-report
+- search-readme
+  
+
 ## References
 
-[GitHub](https://github.com/jai-python3/jira-python-utils)
-[PYPI](https://pypi.org/project/jira-python-utils/)
+* [GitHub](https://github.com/jai-python3/jira-python-utils)
+* [PYPI](https://pypi.org/project/jira-python-utils/)
