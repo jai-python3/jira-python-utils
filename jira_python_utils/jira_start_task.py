@@ -163,7 +163,7 @@ def initialize_jira_directory(jira_root_dir: str, jira_id: str, verbose: bool = 
 
 @click.command()
 @click.option('--config_file', help=f"Optional: The configuration YAML file - default is '{constants.DEFAULT_CONFIG_FILE}'")
-@click.option('--crdential_file', help=f"Optional: The file containing the username and password for logging into Jira - default is '{constants.DEFAULT_CREDENTIAL_FILE}'")
+@click.option('--credential_file', help=f"Optional: The file containing the username and password for logging into Jira - default is '{constants.DEFAULT_CREDENTIAL_FILE}'")
 @click.option('--jira_id', help='Required: The Jira ticket identifier')
 @click.option('--jira_root_dir', help='Optional: The root directory where your Jira issue-specific subdirectories are created')
 @click.option('--logfile', help="Optional: The log file")
