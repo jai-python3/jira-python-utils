@@ -31,6 +31,10 @@ DEFAULT_OUTDIR_BASE = os.path.join(
     DEFAULT_PROJECT,
 )
 
+DEFAULT_JIRA_ROOT_DIR = os.path.join(
+    os.getenv("HOME"),
+    "jira"
+)
 
 LOGGING_FORMAT = "%(levelname)s : %(asctime)s : %(pathname)s : %(lineno)d : %(message)s"
 

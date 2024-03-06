@@ -16,47 +16,20 @@ from typing import Optional
 from .helper import get_jira_url, get_summary
 from .file_utils import check_infile_status
 from .console_helper import print_yellow, print_red
+from . import constants
 
 error_console = Console(stderr=True, style="bold red")
 
 console = Console()
 
-DEFAULT_PROJECT = "jira-python-utils"
 
 DEFAULT_TIMESTAMP = str(datetime.today().strftime('%Y-%m-%d-%H%M%S'))
 
-DEFAULT_URL_FILE = os.path.join(
-    os.getenv("HOME"),
-    '.jira',
-    'jira_rest_url.txt'
-)
-
-DEFAULT_CREDENTIAL_FILE = os.path.join(
-    os.getenv('HOME'),
-    ".jira",
-    "credentials.txt"
-)
-
-DEFAULT_CONFIG_FILE = os.path.join(
-    os.path.dirname(os.path.realpath(__file__)),
-    'conf',
-    'config.yaml'
-)
-
 DEFAULT_OUTDIR = os.path.join(
-    '/tmp/',
-    os.getenv("USER"),
-    DEFAULT_PROJECT,
+    constants.DEFAULT_OUTDIR_BASE,
     os.path.splitext(os.path.basename(__file__))[0],
-    DEFAULT_TIMESTAMP
+    constants.DEFAULT_TIMESTAMP
 )
-
-
-LOGGING_FORMAT = "%(levelname)s : %(asctime)s : %(pathname)s : %(lineno)d : %(message)s"
-
-LOG_LEVEL = logging.INFO
-
-DEFAULT_VERBOSE = False
 
 
 def echo_script(jira_id: str, jira_dir: str) -> None:
@@ -67,7 +40,7 @@ def echo_script(jira_id: str, jira_dir: str) -> None:
         jira_dir (str): The Jira issue-specific directory.
     """
     console.print("Execute this when ready to start:")
-    outfile = os.path.join(jira_dir, f"script_{DEFAULT_TIMESTAMP}.txt")
+    outfile = os.path.join(jira_dir, f"script_{constants.DEFAULT_TIMESTAMP}.txt")
     console.print(f"script -q {outfile}[/]")
     console.print(f"echo 'Starting task {jira_id}'[/]")
 
@@ -84,7 +57,7 @@ def get_home_jira_dir() -> str:
         logging.info(f"Created directory '{home_jira_dir}'")
     return home_jira_dir
 
-def create_symlink_directory(jira_dir: str, verbose: bool = DEFAULT_VERBOSE) -> None:
+def create_symlink_directory(jira_dir: str, verbose: bool = constants.DEFAULT_VERBOSE) -> None:
     """Create a symlink to the Jira issue-specific directory in the user's home directory.
 
     Args:
@@ -110,7 +83,7 @@ def create_symlink_directory(jira_dir: str, verbose: bool = DEFAULT_VERBOSE) -> 
         sys.exit(1)
 
 
-def create_readme_file(jira_dir: str, jira_id: str, url: str, title: str, verbose: bool = DEFAULT_VERBOSE) -> None:
+def create_readme_file(jira_dir: str, jira_id: str, url: str, title: str, verbose: bool = constants.DEFAULT_VERBOSE) -> None:
     """Create a README.md file in the Jira issue directory.
 
     Args:
@@ -163,7 +136,7 @@ def create_metadata_file(jira_dir: str, jira_id: str, url: str, title: str) -> N
     console.print(f"Wrote metadata file '{outfile}'")
 
 
-def initialize_jira_directory(jira_root_dir: str, jira_id: str, verbose: bool = DEFAULT_VERBOSE) -> str:
+def initialize_jira_directory(jira_root_dir: str, jira_id: str, verbose: bool = constants.DEFAULT_VERBOSE) -> str:
     """Create the Jira id directory and return the that path.
 
     Args:
@@ -189,13 +162,13 @@ def initialize_jira_directory(jira_root_dir: str, jira_id: str, verbose: bool = 
 
 
 @click.command()
-@click.option('--config_file', help=f"Optional: The configuration YAML file - default is '{DEFAULT_CONFIG_FILE}'")
-@click.option('--crdential_file', help=f"Optional: The file containing the username and password for logging into Jira - default is '{DEFAULT_CREDENTIAL_FILE}'")
+@click.option('--config_file', help=f"Optional: The configuration YAML file - default is '{constants.DEFAULT_CONFIG_FILE}'")
+@click.option('--crdential_file', help=f"Optional: The file containing the username and password for logging into Jira - default is '{constants.DEFAULT_CREDENTIAL_FILE}'")
 @click.option('--jira_id', help='Required: The Jira ticket identifier')
 @click.option('--jira_root_dir', help='Optional: The root directory where your Jira issue-specific subdirectories are created')
 @click.option('--logfile', help="Optional: The log file")
 @click.option('--outdir', help=f"Optional: The default is the current working directory - default is '{DEFAULT_OUTDIR}'")
-@click.option('--verbose', is_flag=True, help=f"Will print more info to STDOUT - default is '{DEFAULT_VERBOSE}'")
+@click.option('--verbose', is_flag=True, help=f"Will print more info to STDOUT - default is '{constants.DEFAULT_VERBOSE}'")
 def main(config_file: Optional[str], credential_file: Optional[str], jira_id: str, jira_root_dir: str, logfile: Optional[str], outdir: Optional[str], verbose: Optional[bool]):
     """Start a Jira task.
 
@@ -221,7 +194,7 @@ def main(config_file: Optional[str], credential_file: Optional[str], jira_id: st
         sys.exit(1)
 
     if config_file is None:
-        config_file = DEFAULT_CONFIG_FILE
+        config_file = constants.DEFAULT_CONFIG_FILE
         print_yellow(f"--config_file was not specified and therefore was set to '{config_file}'")
 
     check_infile_status(config_file, "yaml")
@@ -242,20 +215,22 @@ def main(config_file: Optional[str], credential_file: Optional[str], jira_id: st
         print_yellow(f"--logfile was not specified and therefore was set to '{logfile}'")
 
     if verbose is None:
-        verbose = DEFAULT_VERBOSE
+        verbose = constants.DEFAULT_VERBOSE
         print_yellow(f"--verbose was not specified and therefore was set to '{verbose}'")
 
-    rest_url_file = DEFAULT_URL_FILE
+    rest_url_file = constants.DEFAULT_URL_FILE
     check_infile_status(rest_url_file)
 
     if credential_file is None:
-        credential_file = DEFAULT_CREDENTIAL_FILE
+        credential_file = constants.DEFAULT_CREDENTIAL_FILE
 
-    check_infile_status(credential_file)
+    if os.path.exists(credential_file):
+        check_infile_status(credential_file)
+
     logging.basicConfig(
         filename=logfile,
-        format=LOGGING_FORMAT,
-        level=LOG_LEVEL
+        format=constants.LOGGING_FORMAT,
+        level=constants.LOG_LEVEL
     )
 
 
@@ -263,15 +238,20 @@ def main(config_file: Optional[str], credential_file: Optional[str], jira_id: st
     config = yaml.safe_load(Path(config_file).read_text())
 
     if jira_root_dir is None:
-        if "jira_root_dir" not in config:
-            print_red(f"Could not find jira_root_dir in the configuration file '{config_file}'")
-            sys.exit(1)
+        if "jira_root_dir" in config:
+            jira_root_dir = config['jira_root_dir']
+            if jira_root_dir is None or jira_root_dir == "":
+                jira_root_dir = constants.DEFAULT_JIRA_ROOT_DIR
+                print_yellow(f"jira_root_dir could not be derived from the configuration file '{config_file}' and so was set to default '{jira_root_dir}'")
+            else:
+                print_yellow(f"jira_root_dir was read from the configuration file '{config_file}' and set to '{jira_root_dir}'")
+        else:
+            jira_root_dir = constants.DEFAULT_JIRA_ROOT_DIR
+            print_yellow(f"jira_root_dir could not be derived from the configuration file '{config_file}' and so was set to default '{jira_root_dir}'")
 
-    jira_root_dir = config['jira_root_dir']
-    if jira_root_dir is None or jira_root_dir == "":
-        print_red(f"jira_root_dir could not be derived from the configuration file '{config_file}' and so was set to default '{jira_root_dir}'")
-        sys.exit(1)
-    print_yellow(f"The jira_root_dir was read from the configuration file '{config_file}' and set to '{jira_root_dir}'")
+    if not os.path.exists(jira_root_dir):
+        pathlib.Path(jira_root_dir).mkdir(parents=True, exist_ok=True)
+        print_yellow(f"Created JIRA root directory '{jira_root_dir}'")
 
     jira_base_url = get_jira_url(rest_url_file)
 
@@ -283,7 +263,9 @@ def main(config_file: Optional[str], credential_file: Optional[str], jira_id: st
 
     create_symlink_directory(jira_dir, verbose)
 
-    summary = get_summary(jira_id, credential_file, rest_url_file)
+    summary = None
+    if credential_file and os.path.exists(credential_file):
+        summary = get_summary(jira_id, credential_file, rest_url_file)
 
     create_readme_file(jira_dir, jira_id, url, summary, verbose)
 
