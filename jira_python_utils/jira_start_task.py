@@ -66,20 +66,26 @@ def create_symlink_directory(jira_dir: str, verbose: bool = constants.DEFAULT_VE
     """
 
     home_jira_dir = get_home_jira_dir()
-    target_dir = os.path.join(home_jira_dir, os.path.basename(jira_dir))
+    link_dir = os.path.join(home_jira_dir, os.path.basename(jira_dir))
 
-    print_yellow(f"Creating symlink '{target_dir}' -> '{jira_dir}'")
+    if os.path.islink(link_dir):
+        logging.info(f"Symlink '{link_dir}' already exists")
+        if verbose:
+            console.print(f"Symlink '{link_dir}' already exists")
+        return
+
+    print_yellow(f"Creating symlink '{link_dir}' -> '{jira_dir}'")
 
     # create the symlink
-    os.symlink(jira_dir, target_dir)
+    os.symlink(jira_dir, link_dir)
 
     # verify the symlink was created successfully
-    if os.path.islink(target_dir):
-        logging.info(f"Symlink created: {target_dir} -> {jira_dir}")
+    if os.path.islink(link_dir):
+        logging.info(f"Symlink created: {link_dir} -> {jira_dir}")
         if verbose:
-            console.print(f"Symlink created: {target_dir} -> {jira_dir}")
+            console.print(f"Symlink created: {link_dir} -> {jira_dir}")
     else:
-        error_console.print(f"Could not create symlink '{target_dir}'")
+        error_console.print(f"Could not create symlink '{link_dir}'")
         sys.exit(1)
 
 
