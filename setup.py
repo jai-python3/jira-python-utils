@@ -24,17 +24,13 @@ test_requirements = ['pytest>=3', ]
 setup(
     author="Jai Python3",
     author_email='jai.python3@gmail.com',
-    python_requires='>=3.5',
+    python_requires='>=3.10',
     classifiers=[
-        'Development Status :: 2 - Pre-Alpha',
+        'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Natural Language :: English',
-        'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.6',
-        'Programming Language :: Python :: 3.7',
-        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.10',
     ],
     description="Collection of Python utils for interacting with JIRA",
     entry_points={

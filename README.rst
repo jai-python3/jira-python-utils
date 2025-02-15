@@ -2,21 +2,27 @@
 JIRA Python Utils
 =================
 
-
-.. image:: https://img.shields.io/pypi/v/jira_python_utils.svg
-        :target: https://pypi.python.org/pypi/jira_python_utils
-
-
-
-Collection of Python utils for interacting with JIRA
-
-
-* Free software: GNU General Public License v3
-* Documentation: https://jai-python3.github.io/jira-python-utils/
+Collection of Python utils for interacting with JIRA from the command line.
 
 
 Features
 --------
+
+Insert the URL for your instance of Jira in the ``conf/jira_rest_url.txt`` file.
+
+.. code-block:: bash
+
+    https://jira.your-domain.com
+
+Insert your Jira username in the ``~/.jira/credentials.txt file``.
+Remember to set permissions ``chmod 600 ~/.jira/credentials.txt``.
+
+Note: The password might not be necessary depending on your Jira configuration.
+
+.. code-block:: bash
+
+    someusername:somepassword
+
 
 The following exported scripts are available:
 
@@ -40,11 +46,3 @@ The following exported scripts are available:
 - jira-sync-workspace
 - jira-to-confluence-weekly-progress-report
 - search-readme
-
-Credits
--------
-
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
-
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage

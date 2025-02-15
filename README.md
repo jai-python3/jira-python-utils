@@ -6,6 +6,8 @@ Collection of Python utility scripts interacting with Jira issue tracking system
   - [Improvements](#improvements)
   - [Installation](#installation)
   - [Generate shell wrapper scripts](#generate-shell-wrapper-scripts)
+  - [Configure Jira URL](#configure-jira-url)
+  - [Configure username](#configure-username)
   - [Exported scripts](#exported-scripts)
   - [Contributing](#contributing)
   - [To-Do/Coming Next](#to-docoming-next)
@@ -36,6 +38,26 @@ This will create the wrapper shell scripts and a file containing aliases named `
 You can then add this line to your `.bashrc` or `.zshrc`:<br>
 `source dir/jira-python-utils-aliases.txt`<br>
 where dir is the directory that contains the aliases file.
+
+
+## Configure Jira URL
+
+Insert the URL for your instance of Jira in the `conf/jira_rest_url.txt` file.
+
+```text
+https://jira.your-domain.com
+```
+
+## Configure username
+
+Insert your Jira username in the `~/.jira/credentials.txt` file.
+Remember to set permissions `chmod 600 ~/.jira/credentials.txt`.
+
+Note: The password might not be necessary depending on your Jira configuration.
+
+```text
+someusername:somepassword
+```
 
 
 ## Exported scripts
